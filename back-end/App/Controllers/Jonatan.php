@@ -3,10 +3,10 @@
 class Jonatan{
     
     public function index(){
-        echo "Listagem";
+        echo "Listagem dos produtos";
     }
 
     public function find(){
-        echo "Listagem";
+        echo "Listagem dos produtos/usuários/trabalhadores";
     }
 }
