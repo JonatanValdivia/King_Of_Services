@@ -1,5 +1,12 @@
 {
-    "name": "20185473/back-end",
+    "name": "jonatan/back-end",
+    "description": "King of Services",
+    "authors": [
+        {
+            "name": "JonatanValdivia",
+            "email": "jonatan.viniciusvaldivia@outlook.com"
+        }
+    ],
     "require": {},
     "autoload":{
         "psr-4": {
