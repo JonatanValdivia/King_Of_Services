@@ -1,5 +1,8 @@
 <?php
 
-use App\Core\Model;
+use App\Core\Router;
 
 require('../vendor/autoload.php');
+
+$router = new Router;
+
