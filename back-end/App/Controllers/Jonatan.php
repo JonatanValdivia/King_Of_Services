@@ -1,7 +1,7 @@
 <?php
 
 class Jonatan{
-    
+    //Métodos
     public function index(){
         echo "Listagem dos produtos";
     }
