@@ -1,8 +1,8 @@
 <?php
 
-class Localhost{
+class Teste{
     public function index(){
-        echo "Listagem de localhost";
+        echo "Listagem de Teste";
     }
 
     public function find(){

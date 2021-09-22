@@ -8,7 +8,7 @@ class Router{
     private $controllerMethod;
     private $params = [];
 
-    public function __construct(){
+    function __construct(){
         //Serve para liberar as origens a acessar a nossa aplicação
         header('Access-Control-Allow-Origin: *');
         //serve para habilitar os métodos que serão usados. Habilitamos o opticons para ser realizado o preflight. Uma requisição de confirmação
@@ -20,7 +20,7 @@ class Router{
 
         $url = $this->parseURL();
         var_dump($url);
-        if(file_exists("App/Controllers/" . $url[1] . ".php")){
+        if(file_exists("../App/Controllers/" . $url[1] . ".php")){
             $this->controller = $url[1];
             unset($url[1]);
         }elseif(empty($url[1])){
@@ -31,7 +31,7 @@ class Router{
         echo "<br>";
         var_dump($this->controller);
 
-        require_once "../App/Controllers/" . $url[1] . ".php";
+        require_once "../App/Controllers/" . ucfirst($this->controller) . ".php";
 
         $this->controller = new $this->controller;
 
@@ -61,7 +61,9 @@ class Router{
                     echo json_encode(["Erro" => "Necessário informar o id para atualização"]);
                     exit;
                 }
+
                 break;
+
             case "DELETE":
                 $this->controllerMethod = "delete";
                 if(isset($url[2]) && is_numeric($url[2])){
@@ -77,13 +79,12 @@ class Router{
                 // http_response_code(400);
                 echo json_encode(["Erro" => "Método não suportado"]);
                 exit;
+
                 break;
         }
 
         call_user_func_array([$this->controller, $this->controllerMethod], $this->params);
         
-
-
     }
 
     private function parseURL(){
