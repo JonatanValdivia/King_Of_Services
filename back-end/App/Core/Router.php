@@ -19,7 +19,7 @@ class Router{
         header("content-tyle: application/json");
 
         $url = $this->parseURL();
-        var_dump($url);
+        // var_dump($url);
         if(file_exists("../App/Controllers/" . $url[1] . ".php")){
             $this->controller = $url[1];
             unset($url[1]);
@@ -28,8 +28,8 @@ class Router{
         }else{
             $this->controller = "Clientes";
         }
-        echo "<br>";
-        var_dump($this->controller);
+        // echo "<br>";
+        // var_dump($this->controller);
 
         require_once "../App/Controllers/" . $this->controller . ".php";
 
