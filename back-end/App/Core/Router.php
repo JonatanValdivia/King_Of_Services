@@ -23,15 +23,15 @@ class Router{
         if(file_exists("../App/Controllers/" . $url[1] . ".php")){
             $this->controller = $url[1];
             unset($url[1]);
-        }elseif(empty($url[1])){
-
+        }elseif(empty($url[1]) || $url[1] == null){
+            $this->controller = "Clientes";
         }else{
-            $this->controller = "Jonatan";
+            $this->controller = "Clientes";
         }
         echo "<br>";
         var_dump($this->controller);
 
-        require_once "../App/Controllers/" . ucfirst($this->controller) . ".php";
+        require_once "../App/Controllers/" . $this->controller . ".php";
 
         $this->controller = new $this->controller;
 
@@ -47,6 +47,7 @@ class Router{
                 }
 
                 break;
+
             case "POST":
                 $this->controllerMethod = "store";
 
@@ -81,6 +82,7 @@ class Router{
                 exit;
 
                 break;
+                
         }
 
         call_user_func_array([$this->controller, $this->controllerMethod], $this->params);
