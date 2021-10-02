@@ -21,4 +21,54 @@ Class Prestadores extends Controller{
     }
   }
 
+  public function store(){
+    $json = file_get_contents("php://input");
+    $modelPrestador = $this->model("Prestador");
+    $dadosInsercao = json_decode($json);
+    $modelPrestador->idSexo = $dadosInsercao->idSexo;
+    $modelPrestador->idProfissao = $dadosInsercao->idProfissao;
+    $modelPrestador->nome = $dadosInsercao->nome;
+    $modelPrestador->email = $dadosInsercao->email;
+    $modelPrestador->senha = $dadosInsercao->senha;
+    $modelPrestador->telefone = $dadosInsercao->telefone;
+    $modelPrestador->dataNascimento = $dadosInsercao->dataNascimento;
+    $modelPrestador->foto = $dadosInsercao->foto;
+    $modelPrestador->criarPrestador();
+    return $modelPrestador;
+    
+  }
+
+  public function update($id){
+    $json = file_get_contents("php://input");
+    $modelPrestador = $this->model("Prestador");
+    $modelPrestador->procurarPorId($id);
+    if(!$modelPrestador){
+      http_response_code(404);
+      $erro = ["erro" => "Cliente não encontrado"];
+      echo json_encode($erro);
+      exit;
+    }
+    $dadosEdicao = json_decode($json);
+    $modelPrestador->idSexo = $dadosEdicao->idSexo;
+    $modelPrestador->nome = $dadosEdicao->nome;
+    $modelPrestador->email = $dadosEdicao->email;
+    $modelPrestador->senha = $dadosEdicao->senha;
+    $modelPrestador->telefone = $dadosEdicao->telefone;
+    $modelPrestador->dataNascimento = $dadosEdicao->dataNascimento;
+    $modelPrestador->foto = $dadosEdicao->foto;
+    if($modelPrestador->atualizar()){
+      http_response_code(204);
+    }else{
+      http_response_code(500);
+      $erro = ["erro" => "Problemas ao editar o cliente"];
+      echo json_encode($erro, JSON_UNESCAPED_UNICODE);
+    }
+    return $modelPrestador;
+
+  }
+
+  public function delete(){
+
+  }
+
 }

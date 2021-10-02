@@ -7,9 +7,7 @@ Class Clientes extends Controller{
   public function index(){
     $modelCliente = $this->model("Cliente");
     $dados = $modelCliente->listarTodos();
-    echo "<pre>";
     echo json_encode($dados, JSON_UNESCAPED_UNICODE);
-    echo "</pre>";
     return $dados;
   }
 
@@ -24,6 +22,21 @@ Class Clientes extends Controller{
       echo json_encode($erro, JSON_UNESCAPED_UNICODE);
     }
     return $dado;
+  }
+
+  public function store(){
+    $json = file_get_contents("php://input");
+    $dadosInsercao = json_decode($json);
+    $modelCliente = $this->model('Cliente');
+    $modelCliente->idSexo = $dadosInsercao->idSexo;
+    $modelCliente->nome = $dadosInsercao->nome;
+    $modelCliente->email = $dadosInsercao->email;
+    $modelCliente->senha = $dadosInsercao->senha;
+    $modelCliente->telefone = $dadosInsercao->telefone;
+    $modelCliente->dataNascimento = $dadosInsercao->dataNascimento;
+    $modelCliente->foto = $dadosInsercao->foto;
+    $modelCliente->inserirCliente();
+    return $modelCliente;
   }
 
   public function update($id){
@@ -55,7 +68,23 @@ Class Clientes extends Controller{
       $erro = ["erro" => "Problemas ao editar o cliente"];
       echo json_encode($erro, JSON_UNESCAPED_UNICODE);
     }
+  }
 
-
+  public function delete($id){
+    $modelCliente = $this->model("Cliente");
+    $modelCliente->buscarPorId($id);
+    if(!$modelCliente){
+      http_response_code(404);
+      $erro = ["erro" => "Cliente não encontrado"];
+      echo json_encode($erro);  
+    }
+    if($modelCliente->deletar()){
+      http_response_code(204);
+    }else{
+      http_response_code(500);
+      $erro = ["erro" => "Problemas ao deletar cliente"];
+      echo json_encode($erro);
+    }
+    //$clienteModel = $clienteModel->deletar();
   }
 }

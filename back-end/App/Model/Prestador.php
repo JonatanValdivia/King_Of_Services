@@ -48,5 +48,57 @@ Class Prestador{
       return false;
     }
   }
+
+  public function criarPrestador(){
+    $selectIdEndereco = "SELECT idEndereco FROM tblendereco ORDER BY 1 DESC LIMIT 1;";
+    $stmt = Model::getConn()->prepare($selectIdEndereco);
+    $stmt->execute();
+
+    if($stmt->rowCount()){
+      $resultado = $stmt->fetch(\PDO::FETCH_OBJ);
+      $this->idEndereco = $resultado->idEndereco;
+    }
+    
+    $sql = "INSERT INTO tblPrestadores (idSexo, idEndereco, idProfissao, nome, email, senha, telefone, dataNascimento, foto) VALUES (:idSexo, :idEndereco, :idProfissao, :nome, :email, :senha, :telefone, :dataNascimento, :foto)";
+
+    $stmt = Model::getConn()->prepare($sql);
+    $stmt->bindValue(":idSexo", $this->idSexo);
+    $stmt->bindValue(":idEndereco", $this->idEndereco);
+    $stmt->bindValue(":idProfissao", $this->idProfissao);
+    $stmt->bindValue(":nome", $this->nome);
+    $stmt->bindValue(":email", $this->email);
+    $stmt->bindValue(":senha", $this->senha);
+    $stmt->bindValue(":telefone", $this->telefone);
+    $stmt->bindValue(":dataNascimento", $this->dataNascimento);
+    $stmt->bindValue(":foto", $this->foto);
+
+    if($stmt->execute()){
+      $this->idPrestadores = Model::getConn()->lastInsertId();
+      echo json_encode($this);
+      return $this;
+    }else{
+      return false;
+    }
+  }
+
+  public function atualizar(){
+    $sql = "UPDATE tblPrestadores SET idSexo = :idSexo, nome = :nome, email = :email, senha = :senha, telefone = :telefone, dataNascimento = :dataNascimento, foto = :foto WHERE idPrestadores = :idPrestadores;";
+    $stmt = Model::getConn()->prepare($sql);
+    $stmt->bindValue(":idSexo", $this->idSexo);
+    $stmt->bindValue(":nome", $this->nome);
+    $stmt->bindValue(":email", $this->email);
+    $stmt->bindValue(":senha", $this->senha);
+    $stmt->bindValue(":telefone", $this->telefone);
+    $stmt->bindValue(":dataNascimento", $this->dataNascimento);
+    $stmt->bindValue(":foto", $this->foto);
+    $stmt->bindValue(":idPrestadores", $this->idPrestadores);
+
+    if($stmt->execute()){
+      return $this;
+    }else{
+      return false;
+    }
+
+  }
   
 }
