@@ -45,7 +45,6 @@ Class Enderecos extends Controller{
   public function update($id){
     $json = file_get_contents("php://input");
     $modelEndereco = $this->model("Endereco");
-    $modelEndereco->buscarPorId($id);
     $dadosEdicao = json_decode($json);
     $modelEndereco->uf = $dadosEdicao->uf;
     $modelEndereco->cidade = $dadosEdicao->cidade;
