@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Core;
-
+//
 class Router{
     private $controller;
     private $method;

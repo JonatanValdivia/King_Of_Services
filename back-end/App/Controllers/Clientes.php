@@ -1,7 +1,7 @@
 <?php
 
 use App\Core\Controller;
-
+//
 Class Clientes extends Controller{
 
   public function index(){
@@ -70,7 +70,7 @@ Class Clientes extends Controller{
     }
   }
 
-  public function delete($id){
+  public function delete($id){ 
     $modelCliente = $this->model("Cliente");
     $modelCliente->buscarPorId($id);
     if(!$modelCliente){
@@ -85,6 +85,6 @@ Class Clientes extends Controller{
       $erro = ["erro" => "Problemas ao deletar cliente"];
       echo json_encode($erro);
     }
-    //$clienteModel = $clienteModel->deletar();
+    $modelCliente = $modelCliente->deletar();
   }
 }

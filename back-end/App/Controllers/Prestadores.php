@@ -1,5 +1,5 @@
 <?php
-
+//
 use App\Core\Controller;
 
 Class Prestadores extends Controller{
@@ -67,8 +67,22 @@ Class Prestadores extends Controller{
 
   }
 
-  public function delete(){
-
+  public function delete($id){
+    $modelPrestador = $this->model("Prestador");
+    $modelPrestador->procurarPorId($id);
+    if(!$modelPrestador){
+      http_response_code(404);
+      $erro = ["erro" => "Cliente não encontrado"];
+      echo json_encode($erro);  
+    }
+    if($modelPrestador->deletar()){
+      http_response_code(204);
+    }else{
+      http_response_code(500);
+      $erro = ["erro" => "Problemas ao deletar cliente"];
+      echo json_encode($erro);
+    }
+    $modelPrestador = $modelPrestador->deletar();
   }
 
 }

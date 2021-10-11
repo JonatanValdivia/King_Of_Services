@@ -1,7 +1,7 @@
 <?php
 
 use App\Core\Model;
-
+//
 class Cliente{
 
   public $idClientes;
@@ -12,10 +12,20 @@ class Cliente{
   public $senha;
   public $telefone;
   public $dataNascimento;
+  public $idade;
   public $foto;
 
   public function listarTodos(){
-    $slq = "SELECT idClientes, idSexo, idEndereco, nome, email, senha, telefone, dataNascimento, foto FROM tblClientes;";
+
+    $slq = "SELECT tblclientes.idClientes as idCliente, tblsexo.descricacao as sexo, tblClientes.nome as nome, tblClientes.email as email, tblendereco.uf as siglaEstado, tblendereco.cidade as cidade, tblendereco.bairro as bairro, 
+    tblendereco.rua as rua, tblendereco.numero as numero, tblendereco.complemento as complemento, 
+    tblendereco.cep as CEP, tblclientes.telefone as telefone, date_format(dataNascimento, '%d/%m/%Y') as dataNascimento,
+    YEAR(CURDATE()) - YEAR(dataNascimento) as idade, tblclientes.foto as foto
+    FROM tblsexo inner join tblclientes
+    on tblsexo.idSexo = tblclientes.idSexo
+    left join tblendereco 
+    on tblendereco.idEndereco = tblclientes.idEndereco;";
+
     $stmt = Model::getConn()->prepare($slq);
     $stmt->execute();
     if($stmt->rowCount() > 0){
@@ -27,19 +37,28 @@ class Cliente{
   }
 
   public function buscarPorId($id){
-    $sql = "SELECT idClientes, idSexo, idEndereco, nome, email, telefone, dataNascimento, foto FROM tblClientes WHERE idClientes = :id;";
+    $sql = "SELECT tblclientes.idClientes as idCliente, tblsexo.descricacao as sexo, tblClientes.nome as nome, tblclientes.email as email, tblendereco.uf as uf, tblendereco.cidade as cidade, tblendereco.bairro as bairro, 
+    tblendereco.rua as rua, tblendereco.numero as numero, tblendereco.complemento as complemento, 
+    tblendereco.cep as CEP, tblclientes.telefone as telefone, date_format(dataNascimento, '%d/%m/%Y') as dataNascimento, 
+    YEAR(CURDATE()) - YEAR(dataNascimento) as idade, tblclientes.foto as foto
+    FROM tblsexo inner join tblclientes
+    on tblsexo.idSexo = tblclientes.idSexo
+    left join tblendereco 
+    on tblendereco.idEndereco = tblclientes.idEndereco 
+    WHERE tblclientes.idClientes = :id;";
     $stmt = Model::getConn()->prepare($sql);
     $stmt->bindValue(':id', $id);
     $stmt->execute();
     if($stmt->rowCount() > 0){
       $resultado = $stmt->fetch(\PDO::FETCH_OBJ);
-      $this->idClientes = $resultado->idClientes;
-      $this->idSexo = $resultado->idSexo;
-      $this->idEndereco = $resultado->idEndereco;
+      $this->idClientes = $id;
+      $this->idSexo = $resultado->sexo;
+      $this->idEndereco = ["uf" => $resultado->uf, "cidade" =>  $resultado->cidade, "bairro" => $resultado->bairro, "rua" =>  $resultado->rua, "numero" => $resultado->numero, "complemento" => $resultado->complemento, "CEP" => $resultado->CEP];
       $this->nome = $resultado->nome;
       $this->email = $resultado->email;
       $this->telefone = $resultado->telefone;
       $this->dataNascimento = $resultado->dataNascimento;
+      $this->idade = $resultado->idade;
       $this->foto = $resultado->foto;
       return $this;
     }else{

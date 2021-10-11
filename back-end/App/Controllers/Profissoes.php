@@ -1,5 +1,5 @@
 <?php
-
+//
 use App\Core\Controller;
 
 Class Profissoes extends Controller{
@@ -26,7 +26,7 @@ Class Profissoes extends Controller{
     $json = file_get_contents("php://input");
     $modelProfissao = $this->model("Profissao");
     $dadosInsercao = json_decode($json);
-    $modelProfissao->nome = $dadosInsercao->nome;
+    $modelProfissao->nomeProfissao = $dadosInsercao->nomeProfissao;
     $modelProfissao->inserirProfissao();
     return $modelProfissao;
   }
@@ -41,11 +41,20 @@ Class Profissoes extends Controller{
       echo json_encode($erro);
     }
     $dadosEdicao = json_decode($json);
-    $modelProfissao->nome = $dadosEdicao->nome;
-    $modelProfissao->atualizar();
+    $modelProfissao->nomeProfissao = $dadosEdicao->nomeProfissao;
+    $modelProfissao->atualizar(); 
   }
 
-  public function delete(){
-
+  public function delete($id){
+    $modelProfissao = $this->model("Profissao");
+    $modelProfissao->buscarPorId($id);
+    if(!$modelProfissao){
+      http_response_code(404);
+      $erro = ["Erro" => "Profissão não encontrada"];
+      echo json_encode($erro);
+    }else if($modelProfissao->deletar()){
+      http_response_code(204);
+    }
+    
   }
 }

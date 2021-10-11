@@ -1,7 +1,7 @@
 <?php
 
 use App\Core\Controller;
-
+//
 Class Enderecos extends Controller{
 
   public function index(){
@@ -64,8 +64,18 @@ Class Enderecos extends Controller{
     
   }
 
-  public function delete(){
-
+  public function delete($id){
+    $modelEndereco = $this->model("Endereco");
+    $modelEndereco->buscarPorId($id);
+    if(!$modelEndereco){
+      http_response_code(404);
+      $erro = ["Erro" => "Endereco não encontrado"];
+      echo json_encode($erro);
+    }else if($modelEndereco->deletar()){
+      http_response_code(204);
+      $mensagem = ["Sucesso!" => "Deleção efetuada com sucesso!"];
+      echo json_encode($mensagem);
+    }
   }
 
 }

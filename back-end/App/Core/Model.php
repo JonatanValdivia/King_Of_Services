@@ -1,7 +1,7 @@
 <?php 
 
 namespace App\Core;
-
+//
 class Model {
     private static $conection;
     public static function getConn(){

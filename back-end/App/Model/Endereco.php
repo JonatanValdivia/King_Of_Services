@@ -18,7 +18,6 @@ Class Endereco{
     $stmt = Model::getConn()->prepare($sql);
     if($stmt->execute()){
       $resultado = $stmt->fetchAll(\PDO::FETCH_OBJ);
-      echo json_encode($resultado); 
       return $resultado;
     }else{
       return false;
@@ -60,12 +59,13 @@ Class Endereco{
   }
 
   public function buscarPorId($id){
-    $sql = "SELECT uf, cidade, bairro, rua, numero, complemento, cep FROM tblEndereco WHERE idEndereco = :id;";
+    $sql = "SELECT idEndereco, uf, cidade, bairro, rua, numero, complemento, cep FROM tblEndereco WHERE idEndereco = :id;";
     $stmt = Model::getConn()->prepare($sql);
     $stmt->bindValue(":id", $id);
     $stmt->execute();
     if($stmt->rowCount() > 0){
       $resultado = $stmt->fetch(\PDO::FETCH_OBJ);
+      $this->idEndereco = $resultado->idEndereco;
       $this->uf = $resultado->uf;
       $this->cidade = $resultado->cidade;
       $this->bairro = $resultado->bairro;
@@ -77,5 +77,12 @@ Class Endereco{
     }else{
       return [];
     }
+  }
+
+  public function deletar(){
+    $sql = "DELETE FROM tblEndereco WHERE idEndereco = :id";
+    $stmt = Model::getConn()->prepare($sql);
+    $stmt->bindValue(':id', $this->idEndereco);
+    $stmt->execute();
   }
 }
