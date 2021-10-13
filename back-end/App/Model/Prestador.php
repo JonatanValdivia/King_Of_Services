@@ -63,7 +63,7 @@ Class Prestador{
     tblprestadores.telefone as telefone, 
     date_format(dataNascimento, '%d/%m/%Y') as dataNascimento, 
     YEAR(CURDATE()) - YEAR(dataNascimento) as idade, 
-    tblprofissao.nome as profissao, 
+    tblprofissao.nomeProfissao as profissao, 
     tblprestadores.foto as foto
     FROM tblsexo inner join tblprestadores
     on tblsexo.idSexo = tblprestadores.idSexo
@@ -158,14 +158,14 @@ Class Prestador{
     tblendereco.cep as CEP, 
     tblprestadores.email as email,
     tblprestadores.telefone as Telefone,
-    tblprofissao.nome as nomeProfissao
+    tblprofissao.nomeProfissao as nomeProfissao
     from tblprofissao left join tblprestadores
     on tblprofissao.idProfissao = tblprestadores.idProfissao
     left join tblendereco 
     on tblprestadores.idEndereco = tblendereco.idEndereco
     left join tblsexo
     on tblprestadores.idsexo = tblsexo.idsexo
-    where tblprofissao.nome like '%$profissao%';";
+    where tblprofissao.nomeProfissao like '%$profissao%';";
 
     $stmt = Model::getConn()->prepare($sql);
     // $stmt->bindValue(':profissao', $profissao);
