@@ -2,9 +2,10 @@
 
 use App\Core\Model;
 
-Class Endereco{
+Class EnderecoPrestador{
 
-  public $idEndereco;
+  public $idEnderecoPrestador;
+  public $idPrestador;
   public $uf;
   public $cidade;
   public $bairro;
@@ -14,7 +15,19 @@ Class Endereco{
   public $cep;
 
   public function listarTodos(){
-    $sql = "SELECT * FROM tblEndereco";
+    $sql = "SELECT tblEnderecoPrestadores.idEnderecoPrestador, 
+    tblEnderecoPrestadores.idPrestador, 
+    tblprestadores.nome as nomePrestador, 
+    tblEnderecoPrestadores.uf, 
+    tblEnderecoPrestadores.cidade,
+    tblEnderecoPrestadores.bairro, 
+    tblEnderecoPrestadores.rua,
+    tblEnderecoPrestadores.numero,
+    tblEnderecoPrestadores.complemento,
+    tblEnderecoPrestadores.cep
+    from tblEnderecoPrestadores inner join tblprestadores
+    on tblEnderecoPrestadores.idPrestador = tblprestadores.idPrestador;
+    ";
     $stmt = Model::getConn()->prepare($sql);
     if($stmt->execute()){
       $resultado = $stmt->fetchAll(\PDO::FETCH_OBJ);
@@ -24,10 +37,11 @@ Class Endereco{
     }
   }
 
-  public function inserirEndereco(){
-    $sql = "INSERT INTO tblEndereco (uf, cidade, bairro, rua, numero, complemento, cep) 
-    values (:uf, :cidade, :bairro, :rua, :numero, :complemento, :cep);";
+  public function inserirEnderecoPrestador(){
+    $sql = "INSERT into tblEnderecoPrestadores (idPrestador, uf, cidade, bairro, rua, numero, complemento, cep) 
+    values (:idPrestador, :uf, :cidade, :bairro, :rua, :numero, :complemento, :cep);";
     $stmt = Model::getConn()->prepare($sql);
+    $stmt->bindValue(":idPrestador", $this->idPrestador);
     $stmt->bindValue(":uf", $this->uf);
     $stmt->bindValue(":cidade", $this->cidade);
     $stmt->bindValue(":bairro", $this->bairro);
@@ -36,7 +50,7 @@ Class Endereco{
     $stmt->bindValue(":complemento", $this->complemento);
     $stmt->bindValue(":cep", $this->cep);
     if($stmt->execute()){
-      $this->idEndereco = Model::getConn()->lastInsertId();
+      $this->idEnderecoPrestador = Model::getConn()->lastInsertId();
       echo json_encode($this);
       return $this;
     }else{
@@ -45,8 +59,9 @@ Class Endereco{
   }
 
   public function atualizar(){
-    $sql = "UPDATE tblEndereco SET uf = :uf, cidade = :cidade, bairro = :bairro, rua = :rua, numero = :numero, complemento = :complemento, cep = :cep WHERE idEndereco = :idEndereco";
+    $sql = "UPDATE tblEnderecoPrestadores set uf = :uf, cidade = :cidade, bairro = :bairro, rua = :rua, numero = :numero, complemento = :complemento, cep = :cep where idEnderecoPrestador = :idEnderecoPrestador;";
     $stmt = Model::getConn()->prepare($sql);
+    // $stmt->bindValue(":idPrestador", $this->idPrestador);
     $stmt->bindValue(":uf", $this->uf);
     $stmt->bindValue(":cidade", $this->cidade);
     $stmt->bindValue(":bairro", $this->bairro);
@@ -54,18 +69,19 @@ Class Endereco{
     $stmt->bindValue(":numero", $this->numero);
     $stmt->bindValue(":complemento", $this->complemento);
     $stmt->bindValue(":cep", $this->cep);
-    $stmt->bindValue(":idEndereco", $this->idEndereco);
+    $stmt->bindValue(":idEnderecoPrestador", $this->idEnderecoPrestador);
     return $stmt->execute();
   }
 
   public function buscarPorId($id){
-    $sql = "SELECT idEndereco, uf, cidade, bairro, rua, numero, complemento, cep FROM tblEndereco WHERE idEndereco = :id;";
+    $sql = "SELECT idEnderecoPrestador, idPrestador, uf, cidade, bairro, rua, numero, complemento, cep FROM tblEnderecoPrestadores WHERE idEnderecoPrestador = :id;";
     $stmt = Model::getConn()->prepare($sql);
     $stmt->bindValue(":id", $id);
     $stmt->execute();
     if($stmt->rowCount() > 0){
       $resultado = $stmt->fetch(\PDO::FETCH_OBJ);
-      $this->idEndereco = $resultado->idEndereco;
+      $this->idEnderecoPrestador = $resultado->idEnderecoPrestador;
+      $this->idPrestador = $resultado->idPrestador;
       $this->uf = $resultado->uf;
       $this->cidade = $resultado->cidade;
       $this->bairro = $resultado->bairro;
@@ -80,9 +96,9 @@ Class Endereco{
   }
 
   public function deletar(){
-    $sql = "DELETE FROM tblEndereco WHERE idEndereco = :id";
+    $sql = "DELETE FROM tblEnderecoPrestadores WHERE idEnderecoPrestador = :id";
     $stmt = Model::getConn()->prepare($sql);
-    $stmt->bindValue(':id', $this->idEndereco);
+    $stmt->bindValue(':id', $this->idEnderecoPrestador);
     $stmt->execute();
   }
 }

@@ -26,6 +26,7 @@ Class Profissoes extends Controller{
     $json = file_get_contents("php://input");
     $modelProfissao = $this->model("Profissao");
     $dadosInsercao = json_decode($json);
+    $modelProfissao->idPrestador = $dadosInsercao->idPrestador;
     $modelProfissao->nomeProfissao = $dadosInsercao->nomeProfissao;
     $modelProfissao->inserirProfissao();
     return $modelProfissao;

@@ -2,16 +2,16 @@
 
 use App\Core\Controller;
 //
-Class Enderecos extends Controller{
+Class EnderecosPrestadores extends Controller{
 
   public function index(){
-    $modelEndereco = $this->model("Endereco");
+    $modelEndereco = $this->model("EnderecoPrestador");
     $dados = $modelEndereco->listarTodos();
     echo json_encode($dados);
   }
 
   public function find($id){
-    $modelEndereco = $this->model("Endereco");
+    $modelEndereco = $this->model("EnderecoPrestador");
     $dados = $modelEndereco->buscarPorId($id);
 
     if($dados){
@@ -27,24 +27,24 @@ Class Enderecos extends Controller{
 
   public function store(){
     $json = file_get_contents("php://input");
-    $modelEndereco = $this->model("Endereco");
+    $modelEnderecoPrestador = $this->model("EnderecoPrestador");
     $dadosinsercao = json_decode($json);
-    //uf, cidade, bairro, rua, numero, complemento, cep
-    $modelEndereco->uf = $dadosinsercao->uf;
-    $modelEndereco->cidade = $dadosinsercao->cidade;
-    $modelEndereco->bairro = $dadosinsercao->bairro;
-    $modelEndereco->rua = $dadosinsercao->rua;
-    $modelEndereco->numero = $dadosinsercao->numero;
-    $modelEndereco->complemento = $dadosinsercao->complemento;
-    $modelEndereco->cep = $dadosinsercao->cep;
-    $modelEndereco->inserirEndereco();
-    return $modelEndereco;
+    $modelEnderecoPrestador->idPrestador = $dadosinsercao->idPrestador;
+    $modelEnderecoPrestador->uf = $dadosinsercao->uf;
+    $modelEnderecoPrestador->cidade = $dadosinsercao->cidade;
+    $modelEnderecoPrestador->bairro = $dadosinsercao->bairro;
+    $modelEnderecoPrestador->rua = $dadosinsercao->rua;
+    $modelEnderecoPrestador->numero = $dadosinsercao->numero;
+    $modelEnderecoPrestador->complemento = $dadosinsercao->complemento;
+    $modelEnderecoPrestador->cep = $dadosinsercao->cep;
+    $modelEnderecoPrestador->inserirEnderecoPrestador();
+    return $modelEnderecoPrestador;
 
   }
 
   public function update($id){
     $json = file_get_contents("php://input");
-    $modelEndereco = $this->model("Endereco");
+    $modelEndereco = $this->model("EnderecoPrestador");
     $dadosEdicao = json_decode($json);
     $modelEndereco->uf = $dadosEdicao->uf;
     $modelEndereco->cidade = $dadosEdicao->cidade;
@@ -53,7 +53,7 @@ Class Enderecos extends Controller{
     $modelEndereco->numero = $dadosEdicao->numero;
     $modelEndereco->complemento = $dadosEdicao->complemento;
     $modelEndereco->cep = $dadosEdicao->cep;
-    $modelEndereco->idEndereco = $id;
+    $modelEndereco->idEnderecoPrestador = $id;
     if($modelEndereco->atualizar()){
       http_response_code(204);
     }else{
@@ -65,7 +65,7 @@ Class Enderecos extends Controller{
   }
 
   public function delete($id){
-    $modelEndereco = $this->model("Endereco");
+    $modelEndereco = $this->model("EnderecoPrestador");
     $modelEndereco->buscarPorId($id);
     if(!$modelEndereco){
       http_response_code(404);

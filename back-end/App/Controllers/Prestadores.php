@@ -26,10 +26,10 @@ Class Prestadores extends Controller{
     $modelPrestador = $this->model("Prestador");
     $dadosInsercao = json_decode($json);
     $modelPrestador->idSexo = $dadosInsercao->idSexo;
-    $modelPrestador->idProfissao = $dadosInsercao->idProfissao;
     $modelPrestador->nome = $dadosInsercao->nome;
     $modelPrestador->email = $dadosInsercao->email;
     $modelPrestador->senha = $dadosInsercao->senha;
+    $modelPrestador->descricao = $dadosInsercao->descricao;
     $modelPrestador->telefone = $dadosInsercao->telefone;
     $modelPrestador->dataNascimento = $dadosInsercao->dataNascimento;
     $modelPrestador->foto = $dadosInsercao->foto;
@@ -47,12 +47,14 @@ Class Prestadores extends Controller{
       $erro = ["erro" => "Cliente não encontrado"];
       echo json_encode($erro);
       exit;
-    }
+    } 
+
     $dadosEdicao = json_decode($json);
     $modelPrestador->idSexo = $dadosEdicao->idSexo;
     $modelPrestador->nome = $dadosEdicao->nome;
     $modelPrestador->email = $dadosEdicao->email;
     $modelPrestador->senha = $dadosEdicao->senha;
+    $modelPrestador->descricao = $dadosEdicao->descricao;
     $modelPrestador->telefone = $dadosEdicao->telefone;
     $modelPrestador->dataNascimento = $dadosEdicao->dataNascimento;
     $modelPrestador->foto = $dadosEdicao->foto;
@@ -64,7 +66,6 @@ Class Prestadores extends Controller{
       echo json_encode($erro, JSON_UNESCAPED_UNICODE);
     }
     return $modelPrestador;
-
   }
 
   public function delete($id){

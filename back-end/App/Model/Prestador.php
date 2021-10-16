@@ -4,39 +4,42 @@ use App\Core\Model;
 //
 Class Prestador{
 
-  public $idPrestadores;
+  public $idPrestador;
   public $idSexo;
-  public $idEndereco;
-  public $idProfissao;
   public $nome;
   public $email;
   public $senha;
+  public $Endereco;
   public $descricao;
   public $telefone;
   public $dataNascimento;
   public $foto;
 
   public function listarTodos(){
-    $sql = "SELECT tblPrestadores.idPrestadores as idPrestador, 
-    tblsexo.descricacao as sexo, 
-    tblPrestadores.nome as nome, 
-    tblPrestadores.email as email, 
-    tblPrestadores.descricao as descricao,
-    tblendereco.uf as siglaEstado, 
-    tblendereco.cidade as cidade, 
-    tblendereco.bairro as bairro, 
-    tblendereco.rua as rua, 
-    tblendereco.numero as numero, 
-    tblendereco.complemento as complemento, 
-    tblendereco.cep as CEP, 
-    tblPrestadores.telefone as telefone, 
-    date_format(dataNascimento, '%d/%m/%Y') as dataNascimento,
+    $sql = "SELECT tblprestadores.idPrestador as idPrestador,
+    tblprestadores.nome as nome,
+    tblsexo.descricao as sexo, 
+    date_format(dataNascimento, '%d/%m/%Y') as dataNascimento, 
     YEAR(CURDATE()) - YEAR(dataNascimento) as idade,
+    tblprestadores.email as email,
+    tblprestadores.telefone as telefone,
+    tblEnderecoPrestadores.uf as uf, 
+    tblEnderecoPrestadores.cidade as cidade, 
+    tblEnderecoPrestadores.bairro as bairro, 
+    tblEnderecoPrestadores.rua as rua, 
+    tblEnderecoPrestadores.numero as numero, 
+    tblEnderecoPrestadores.complemento as complemento, 
+    tblEnderecoPrestadores.cep as CEP,
+    tblprofissao.nomeProfissao as profissao,
+    tblprestadores.descricao as descricao,
     tblPrestadores.foto as foto
-    FROM tblsexo inner join tblPrestadores
-    on tblsexo.idSexo = tblPrestadores.idSexo
-    left join tblendereco 
-    on tblendereco.idEndereco = tblPrestadores.idEndereco;";
+    from tblprestadores 
+    inner join tblsexo
+    on tblsexo.idSexo = tblprestadores.idSexo
+    inner join tblEnderecoPrestadores
+    on tblprestadores.idPrestador = tblEnderecoPrestadores.idPrestador
+    inner join tblprofissao
+    on tblprestadores.idPrestador = tblprofissao.idPrestador;";
     $stmt = Model::getConn()->prepare($sql);
     $stmt->execute();
     if($stmt->rowCount() > 0){
@@ -48,39 +51,40 @@ Class Prestador{
   }
 
   public function procurarPorId($id){
-    $sql = "SELECT tblprestadores.idPrestadores as idPrestador, 
-    tblsexo.descricacao as sexo, 
+    $sql = "SELECT tblprestadores.idPrestador as idPrestador,
     tblprestadores.nome as nome,
-    tblprestadores.email as email,
-    tblPrestadores.descricao as descricao, 
-    tblendereco.uf as uf, 
-    tblendereco.cidade as cidade, 
-    tblendereco.bairro as bairro, 
-    tblendereco.rua as rua, 
-    tblendereco.numero as numero, 
-    tblendereco.complemento as complemento, 
-    tblendereco.cep as CEP, 
-    tblprestadores.telefone as telefone, 
+    tblsexo.descricao as sexo, 
     date_format(dataNascimento, '%d/%m/%Y') as dataNascimento, 
-    YEAR(CURDATE()) - YEAR(dataNascimento) as idade, 
-    tblprofissao.nomeProfissao as profissao, 
-    tblprestadores.foto as foto
-    FROM tblsexo inner join tblprestadores
+    YEAR(CURDATE()) - YEAR(dataNascimento) as idade,
+    tblprestadores.email as email,
+    tblprestadores.telefone as telefone,
+    tblEnderecoPrestadores.uf as uf, 
+    tblEnderecoPrestadores.cidade as cidade, 
+    tblEnderecoPrestadores.bairro as bairro, 
+    tblEnderecoPrestadores.rua as rua, 
+    tblEnderecoPrestadores.numero as numero, 
+    tblEnderecoPrestadores.complemento as complemento, 
+    tblEnderecoPrestadores.cep as CEP,
+    tblprofissao.nomeProfissao as profissao,
+    tblprestadores.descricao as descricao,
+    tblPrestadores.foto as foto
+    from tblprestadores 
+    inner join tblsexo
     on tblsexo.idSexo = tblprestadores.idSexo
-    left join tblendereco 
-    on tblendereco.idEndereco = tblprestadores.idEndereco 
-    left join tblprofissao
-    on tblprofissao.idProfissao = tblprestadores.idProfissao
-    WHERE tblprestadores.idPrestadores = :id;";
+    inner join tblEnderecoPrestadores
+    on tblprestadores.idPrestador = tblEnderecoPrestadores.idPrestador
+    inner join tblprofissao
+    on tblprestadores.idPrestador = tblprofissao.idPrestador
+    where tblprestadores.idPrestador = :id;";
 
     $stmt = Model::getConn()->prepare($sql);
     $stmt->bindValue(':id', $id);
     $stmt->execute();
     if($stmt->rowCount() > 0){
       $resultado = $stmt->fetch(\PDO::FETCH_OBJ);
-      $this->idPrestadores = $resultado->idPrestador;
+      $this->idPrestador = $resultado->idPrestador;
       $this->idSexo = $resultado->sexo;
-      $this->idEndereco = ["uf" => $resultado->uf, "cidade" =>  $resultado->cidade, "bairro" => $resultado->bairro, "rua" =>  $resultado->rua, "numero" => $resultado->numero, "complemento" => $resultado->complemento, "CEP" => $resultado->CEP];
+      $this->Endereco = ["uf" => $resultado->uf, "cidade" =>  $resultado->cidade, "bairro" => $resultado->bairro, "rua" =>  $resultado->rua, "numero" => $resultado->numero, "complemento" => $resultado->complemento, "CEP" => $resultado->CEP];
       $this->idProfissao = $resultado->profissao;
       $this->nome = $resultado->nome;
       $this->descricao = $resultado->descricao;
@@ -95,48 +99,53 @@ Class Prestador{
   }
 
   public function criarPrestador(){
-    $selectIdEndereco = "SELECT idEndereco FROM tblendereco ORDER BY 1 DESC LIMIT 1;";
-    $stmt = Model::getConn()->prepare($selectIdEndereco);
+
+    $sql = "SELECT idPrestador from tblPrestadores where email = :e";
+    $stmt = Model::getConn()->prepare($sql);
+    $stmt->bindValue(":e", $this->email);
     $stmt->execute();
+    if($stmt->rowCount() > 0){
+      $erro = ["Erro" => "Esse email já está cadastrado"];
+      echo json_encode($erro);
+      return false;
+    }else{
+      $sql = "INSERT INTO tblPrestadores (idSexo, nome, email, senha, descricao, telefone, dataNascimento, foto) VALUES (:idSexo, :nome, :email, :senha, :descricao, :telefone, :dataNascimento, :foto)";
 
-    if($stmt->rowCount()){
-      $resultado = $stmt->fetch(\PDO::FETCH_OBJ);
-      $this->idEndereco = $resultado->idEndereco;
+      $stmt = Model::getConn()->prepare($sql);
+      $stmt->bindValue(":idSexo", $this->idSexo);
+      $stmt->bindValue(":nome", $this->nome);
+      $stmt->bindValue(":email", $this->email);
+      $stmt->bindValue(":senha", password_hash($this->senha, PASSWORD_DEFAULT));
+      $stmt->bindValue(":descricao", $this->descricao);
+      $stmt->bindValue(":telefone", $this->telefone);
+      $stmt->bindValue(":dataNascimento", $this->dataNascimento);
+      $stmt->bindValue(":foto", $this->foto);
+
+      if($stmt->execute()){
+        $this->idPrestador = Model::getConn()->lastInsertId();
+        echo json_encode($this);
+        return $this;
+      }else{
+        return false;
+      }
     }
+
     
-    $sql = "INSERT INTO tblPrestadores (idSexo, idEndereco, idProfissao, nome, email, senha, telefone, dataNascimento, foto) VALUES (:idSexo, :idEndereco, :idProfissao, :nome, :email, :senha, :telefone, :dataNascimento, :foto)";
-
-    $stmt = Model::getConn()->prepare($sql);
-    $stmt->bindValue(":idSexo", $this->idSexo);
-    $stmt->bindValue(":idEndereco", $this->idEndereco);
-    $stmt->bindValue(":idProfissao", $this->idProfissao);
-    $stmt->bindValue(":nome", $this->nome);
-    $stmt->bindValue(":email", $this->email);
-    $stmt->bindValue(":senha", $this->senha);
-    $stmt->bindValue(":telefone", $this->telefone);
-    $stmt->bindValue(":dataNascimento", $this->dataNascimento);
-    $stmt->bindValue(":foto", $this->foto);
-
-    if($stmt->execute()){
-      $this->idPrestadores = Model::getConn()->lastInsertId();
-      echo json_encode($this);
-      return $this;
-    }else{
-      return false;
-    }
   }
-
+  
   public function atualizar(){
-    $sql = "UPDATE tblPrestadores SET idSexo = :idSexo, nome = :nome, email = :email, senha = :senha, telefone = :telefone, dataNascimento = :dataNascimento, foto = :foto WHERE idPrestadores = :idPrestadores;";
+    $sql = "UPDATE tblprestadores set idSexo = :idSexo, nome = :nome, email = :email, senha = :senha, descricao = :descricao, telefone = :telefone, dataNascimento = :dataNascimento, foto = :foto
+    where idPrestador = :idPrestador;";
     $stmt = Model::getConn()->prepare($sql);
     $stmt->bindValue(":idSexo", $this->idSexo);
     $stmt->bindValue(":nome", $this->nome);
     $stmt->bindValue(":email", $this->email);
-    $stmt->bindValue(":senha", $this->senha);
+    $stmt->bindValue(":senha", password_hash($this->senha, PASSWORD_DEFAULT));
+    $stmt->bindValue(":descricao", $this->descricao);
     $stmt->bindValue(":telefone", $this->telefone);
     $stmt->bindValue(":dataNascimento", $this->dataNascimento);
     $stmt->bindValue(":foto", $this->foto);
-    $stmt->bindValue(":idPrestadores", $this->idPrestadores);
+    $stmt->bindValue(":idPrestador", $this->idPrestador);
 
     if($stmt->execute()){
       return $this;
@@ -144,25 +153,26 @@ Class Prestador{
       return false;
     }
   }
+
 
   public function pesquisarProfissao($profissao){
-    $sql = "SELECT tblprestadores.nome as nomePrestador, 
+    $sql = "SELECT tblprestadores.nome as nome, 
     tblprestadores.dataNascimento as dataNascimento, 
-    tblsexo.descricacao as sexo,
-    tblendereco.uf as estado,
-    tblendereco.cidade as cidade,
-    tblendereco.bairro as bairro, 
-    tblendereco.rua as rua, 
-    tblendereco.numero as numero, 
-    tblendereco.complemento as complemento,
-    tblendereco.cep as CEP, 
+    tblsexo.descricao as sexo,
+    tblEnderecoPrestadores.uf as estado,
+    tblEnderecoPrestadores.cidade as cidade,
+    tblEnderecoPrestadores.bairro as bairro, 
+    tblEnderecoPrestadores.rua as rua, 
+    tblEnderecoPrestadores.numero as numero, 
+    tblEnderecoPrestadores.complemento as complemento,
+    tblEnderecoPrestadores.cep as CEP, 
     tblprestadores.email as email,
     tblprestadores.telefone as Telefone,
     tblprofissao.nomeProfissao as nomeProfissao
-    from tblprofissao left join tblprestadores
-    on tblprofissao.idProfissao = tblprestadores.idProfissao
-    left join tblendereco 
-    on tblprestadores.idEndereco = tblendereco.idEndereco
+    from tblprestadores left join tblprofissao
+	on tblprestadores.idPrestador = tblprofissao.idPrestador
+    left join tblEnderecoPrestadores 
+    on tblprestadores.idPrestador = tblEnderecoPrestadores.idPrestador
     left join tblsexo
     on tblprestadores.idsexo = tblsexo.idsexo
     where tblprofissao.nomeProfissao like '%$profissao%';";
@@ -180,10 +190,28 @@ Class Prestador{
   }
 
   public function deletar(){
-    $sql = "DELETE FROM tblPrestadores WHERE idPrestadores = :id";
+    $sql = "DELETE FROM tblPrestadores WHERE idPrestador = :id";
     $stmt = Model::getConn()->prepare($sql);
-    $stmt->bindValue(":id", $this->idPrestadores);
+    $stmt->bindValue(":id", $this->idPrestador);
     return $stmt->execute();
   }
-  
+
+  public function loginPrestador(){
+    $sql = "SELECT * from tblPrestadores where email = :email;";
+    $stmt = Model::getConn()->prepare($sql);
+    $stmt->bindValue(":email", $this->email);
+    $stmt->execute();
+    if($stmt->rowCount() > 0){
+      $resultado = $stmt->fetch(\PDO::FETCH_OBJ);
+      if(!password_verify($this->senha, $resultado->senha) || $this->email != $resultado->email){
+        return false;
+      }else{
+        $this->idPrestador = $resultado->idPrestador;
+        $this->senha = password_hash($resultado->senha, PASSWORD_DEFAULT);
+        return $this;
+      }
+    }else{
+      return false;
+    }
+  }
 }
