@@ -36,6 +36,17 @@ Class Clientes extends Controller{
     $modelCliente->dataNascimento = $dadosInsercao->dataNascimento;
     $modelCliente->foto = $dadosInsercao->foto;
     $modelCliente->inserirCliente();
+
+    $modelEnderecoCLiente = $this->model("EnderecoCliente");
+    $modelEnderecoCLiente->idCliente = $modelCliente->idCliente;
+    $modelEnderecoCLiente->uf = $dadosInsercao->uf;
+    $modelEnderecoCLiente->cidade = $dadosInsercao->cidade;
+    $modelEnderecoCLiente->bairro = $dadosInsercao->bairro;
+    $modelEnderecoCLiente->rua = $dadosInsercao->rua;
+    $modelEnderecoCLiente->numero = $dadosInsercao->numero;
+    $modelEnderecoCLiente->complemento = $dadosInsercao->complemento;
+    $modelEnderecoCLiente->cep = $dadosInsercao->cep;
+    $modelEnderecoCLiente->inserirEnderecoCliente();
     return $modelCliente;
   }
 

@@ -13,7 +13,7 @@ Class PesquisarPrestador extends Controller{
     $dados = $modelPrestador->pesquisarProfissao($profissao);
     if($dados){
       http_response_code(200);
-      echo json_encode($dados);
+      echo json_encode($dados, JSON_UNESCAPED_UNICODE);
     }else{
       http_response_code(404);
       $erro = ["Erro" => "Não há cadastros dessa profissao"];

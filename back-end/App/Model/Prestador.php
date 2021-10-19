@@ -5,6 +5,7 @@ use App\Core\Model;
 Class Prestador{
 
   public $idPrestador;
+  public $idProfissao;
   public $idSexo;
   public $nome;
   public $email;
@@ -39,7 +40,7 @@ Class Prestador{
     inner join tblEnderecoPrestadores
     on tblprestadores.idPrestador = tblEnderecoPrestadores.idPrestador
     inner join tblprofissao
-    on tblprestadores.idPrestador = tblprofissao.idPrestador;";
+    on tblprofissao.idprofissao = tblprestadores.idProfissao;";
     $stmt = Model::getConn()->prepare($sql);
     $stmt->execute();
     if($stmt->rowCount() > 0){
@@ -74,7 +75,7 @@ Class Prestador{
     inner join tblEnderecoPrestadores
     on tblprestadores.idPrestador = tblEnderecoPrestadores.idPrestador
     inner join tblprofissao
-    on tblprestadores.idPrestador = tblprofissao.idPrestador
+    on tblprofissao.idprofissao = tblprestadores.idProfissao
     where tblprestadores.idPrestador = :id;";
 
     $stmt = Model::getConn()->prepare($sql);
@@ -109,9 +110,10 @@ Class Prestador{
       echo json_encode($erro);
       return false;
     }else{
-      $sql = "INSERT INTO tblPrestadores (idSexo, nome, email, senha, descricao, telefone, dataNascimento, foto) VALUES (:idSexo, :nome, :email, :senha, :descricao, :telefone, :dataNascimento, :foto)";
+      $sql = "INSERT INTO tblPrestadores (idProfissao, idSexo, nome, email, senha, descricao, telefone, dataNascimento, foto) VALUES (:idProfissao, :idSexo, :nome, :email, :senha, :descricao, :telefone, :dataNascimento, :foto)";
 
       $stmt = Model::getConn()->prepare($sql);
+      $stmt->bindValue(":idProfissao", $this->idProfissao);
       $stmt->bindValue(":idSexo", $this->idSexo);
       $stmt->bindValue(":nome", $this->nome);
       $stmt->bindValue(":email", $this->email);
@@ -134,9 +136,10 @@ Class Prestador{
   }
   
   public function atualizar(){
-    $sql = "UPDATE tblprestadores set idSexo = :idSexo, nome = :nome, email = :email, senha = :senha, descricao = :descricao, telefone = :telefone, dataNascimento = :dataNascimento, foto = :foto
+    $sql = "UPDATE tblprestadores set idProfissao = :idProfissao, idSexo = :idSexo, nome = :nome, email = :email, senha = :senha, descricao = :descricao, telefone = :telefone, dataNascimento = :dataNascimento, foto = :foto
     where idPrestador = :idPrestador;";
     $stmt = Model::getConn()->prepare($sql);
+    $stmt->bindValue(":idProfissao", $this->idProfissao);
     $stmt->bindValue(":idSexo", $this->idSexo);
     $stmt->bindValue(":nome", $this->nome);
     $stmt->bindValue(":email", $this->email);
@@ -168,9 +171,10 @@ Class Prestador{
     tblEnderecoPrestadores.cep as CEP, 
     tblprestadores.email as email,
     tblprestadores.telefone as Telefone,
-    tblprofissao.nomeProfissao as nomeProfissao
+    tblprofissao.nomeProfissao as nomeProfissao,
+    tblPrestadores.descricao as descricao
     from tblprestadores left join tblprofissao
-	on tblprestadores.idPrestador = tblprofissao.idPrestador
+	on tblprofissao.idProfissao = tblPrestadores.idProfissao
     left join tblEnderecoPrestadores 
     on tblprestadores.idPrestador = tblEnderecoPrestadores.idPrestador
     left join tblsexo

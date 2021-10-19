@@ -3,6 +3,7 @@
 use App\Core\Controller;
 
 Class Profissoes extends Controller{
+  
   public function index(){
     $modelProfissao = $this->model("Profissao");
     $modelProfissao->listarTodasProfissoes();
@@ -26,7 +27,6 @@ Class Profissoes extends Controller{
     $json = file_get_contents("php://input");
     $modelProfissao = $this->model("Profissao");
     $dadosInsercao = json_decode($json);
-    $modelProfissao->idPrestador = $dadosInsercao->idPrestador;
     $modelProfissao->nomeProfissao = $dadosInsercao->nomeProfissao;
     $modelProfissao->inserirProfissao();
     return $modelProfissao;
@@ -56,6 +56,6 @@ Class Profissoes extends Controller{
     }else if($modelProfissao->deletar()){
       http_response_code(204);
     }
-    
   }
+
 }

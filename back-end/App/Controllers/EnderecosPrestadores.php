@@ -25,22 +25,22 @@ Class EnderecosPrestadores extends Controller{
     return $dados;
   }
 
-  public function store(){
-    $json = file_get_contents("php://input");
-    $modelEnderecoPrestador = $this->model("EnderecoPrestador");
-    $dadosinsercao = json_decode($json);
-    $modelEnderecoPrestador->idPrestador = $dadosinsercao->idPrestador;
-    $modelEnderecoPrestador->uf = $dadosinsercao->uf;
-    $modelEnderecoPrestador->cidade = $dadosinsercao->cidade;
-    $modelEnderecoPrestador->bairro = $dadosinsercao->bairro;
-    $modelEnderecoPrestador->rua = $dadosinsercao->rua;
-    $modelEnderecoPrestador->numero = $dadosinsercao->numero;
-    $modelEnderecoPrestador->complemento = $dadosinsercao->complemento;
-    $modelEnderecoPrestador->cep = $dadosinsercao->cep;
-    $modelEnderecoPrestador->inserirEnderecoPrestador();
-    return $modelEnderecoPrestador;
+  // public function store(){
+  //   $json = file_get_contents("php://input");
+  //   $modelEnderecoPrestador = $this->model("EnderecoPrestador");
+  //   $dadosinsercao = json_decode($json);
+  //   $modelEnderecoPrestador->idPrestador = $dadosinsercao->idPrestador;
+  //   $modelEnderecoPrestador->uf = $dadosinsercao->uf;
+  //   $modelEnderecoPrestador->cidade = $dadosinsercao->cidade;
+  //   $modelEnderecoPrestador->bairro = $dadosinsercao->bairro;
+  //   $modelEnderecoPrestador->rua = $dadosinsercao->rua;
+  //   $modelEnderecoPrestador->numero = $dadosinsercao->numero;
+  //   $modelEnderecoPrestador->complemento = $dadosinsercao->complemento;
+  //   $modelEnderecoPrestador->cep = $dadosinsercao->cep;
+  //   $modelEnderecoPrestador->inserirEnderecoPrestador();
+  //   return $modelEnderecoPrestador;
 
-  }
+  // }
 
   public function update($id){
     $json = file_get_contents("php://input");

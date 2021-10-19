@@ -25,6 +25,7 @@ Class Prestadores extends Controller{
     $json = file_get_contents("php://input");
     $modelPrestador = $this->model("Prestador");
     $dadosInsercao = json_decode($json);
+    $modelPrestador->idProfissao = $dadosInsercao->idProfissao;
     $modelPrestador->idSexo = $dadosInsercao->idSexo;
     $modelPrestador->nome = $dadosInsercao->nome;
     $modelPrestador->email = $dadosInsercao->email;
@@ -33,7 +34,24 @@ Class Prestadores extends Controller{
     $modelPrestador->telefone = $dadosInsercao->telefone;
     $modelPrestador->dataNascimento = $dadosInsercao->dataNascimento;
     $modelPrestador->foto = $dadosInsercao->foto;
+
+    //passar o id da profissao
+
     $modelPrestador->criarPrestador();
+    
+    $modelEnderecoPrestador = $this->model("EnderecoPrestador");
+    $modelEnderecoPrestador->idPrestador = $modelPrestador->idPrestador;
+    $modelEnderecoPrestador->uf = $dadosInsercao->uf;
+    $modelEnderecoPrestador->cidade = $dadosInsercao->cidade;
+    $modelEnderecoPrestador->bairro = $dadosInsercao->bairro;
+    $modelEnderecoPrestador->rua = $dadosInsercao->rua;
+    $modelEnderecoPrestador->numero = $dadosInsercao->numero;
+    $modelEnderecoPrestador->complemento = $dadosInsercao->complemento;
+    $modelEnderecoPrestador->cep = $dadosInsercao->cep;
+    $modelEnderecoPrestador->inserirEnderecoPrestador();
+
+    echo json_encode($modelPrestador->idPrestador);
+    //criar o endereço
     return $modelPrestador;
     
   }
@@ -50,6 +68,7 @@ Class Prestadores extends Controller{
     } 
 
     $dadosEdicao = json_decode($json);
+    $modelPrestador->idProfissao = $dadosEdicao->idProfissao;
     $modelPrestador->idSexo = $dadosEdicao->idSexo;
     $modelPrestador->nome = $dadosEdicao->nome;
     $modelPrestador->email = $dadosEdicao->email;

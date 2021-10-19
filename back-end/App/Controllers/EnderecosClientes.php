@@ -24,21 +24,21 @@ class EnderecosClientes extends Controller{
     return $dado;
   }
 
-  public function store(){
-    $json = file_get_contents("php://input");
-    $dadosInsercao = json_decode($json);
-    $modelEnderecoCLiente = $this->model("EnderecoCliente");
-    $modelEnderecoCLiente->idCliente = $dadosInsercao->idCliente;
-    $modelEnderecoCLiente->uf = $dadosInsercao->uf;
-    $modelEnderecoCLiente->cidade = $dadosInsercao->cidade;
-    $modelEnderecoCLiente->bairro = $dadosInsercao->bairro;
-    $modelEnderecoCLiente->rua = $dadosInsercao->rua;
-    $modelEnderecoCLiente->numero = $dadosInsercao->numero;
-    $modelEnderecoCLiente->complemento = $dadosInsercao->complemento;
-    $modelEnderecoCLiente->cep = $dadosInsercao->cep;
-    $modelEnderecoCLiente->inserirEnderecoCliente();
-    return $modelEnderecoCLiente;
-  }
+  // public function store(){
+  //   $json = file_get_contents("php://input");
+  //   $dadosInsercao = json_decode($json);
+  //   $modelEnderecoCLiente = $this->model("EnderecoCliente");
+  //   $modelEnderecoCLiente->idCliente = $dadosInsercao->idCliente;
+  //   $modelEnderecoCLiente->uf = $dadosInsercao->uf;
+  //   $modelEnderecoCLiente->cidade = $dadosInsercao->cidade;
+  //   $modelEnderecoCLiente->bairro = $dadosInsercao->bairro;
+  //   $modelEnderecoCLiente->rua = $dadosInsercao->rua;
+  //   $modelEnderecoCLiente->numero = $dadosInsercao->numero;
+  //   $modelEnderecoCLiente->complemento = $dadosInsercao->complemento;
+  //   $modelEnderecoCLiente->cep = $dadosInsercao->cep;
+  //   $modelEnderecoCLiente->inserirEnderecoCliente();
+  //   return $modelEnderecoCLiente;
+  // }
 
   public function update($id){
     $json = file_get_contents("php://input");

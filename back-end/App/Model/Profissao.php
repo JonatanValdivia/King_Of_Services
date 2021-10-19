@@ -5,7 +5,6 @@ use App\Core\Model;
 class Profissao{
 
   public $idProfissao;
-  public $idPrestador;
   public $nomePrestador;
   public $nomeProfissao;
 
@@ -28,8 +27,8 @@ class Profissao{
     tblprofissao.nomeProfissao as nomeProfissao, 
     tblprestadores.nome as nomePrestador 
     from tblprofissao inner join tblprestadores 
-    on tblprestadores.idPrestador = tblprofissao.idPrestador 
-    where idProfissao = :id; ";
+    on  tblprofissao.idProfissao = tblprestadores.idProfissao 
+    where tblprofissao.idProfissao = :id; ";
     $stmt = Model::getConn()->prepare($sql);
     $stmt->bindValue(":id", $id);
     $stmt->execute();
@@ -45,9 +44,8 @@ class Profissao{
   }
 
   public function inserirProfissao(){
-    $sql = "INSERT into tblprofissao (idPrestador, nomeProfissao) values (:idPrestador, :nomeProfissao);";
+    $sql = "INSERT into tblprofissao (nomeProfissao) values (:nomeProfissao);";
     $stmt = Model::getConn()->prepare($sql);
-    $stmt->bindValue(":idPrestador", $this->idPrestador);
     $stmt->bindValue(":nomeProfissao", $this->nomeProfissao);
     if($stmt->execute()){
       $this->idProfissao = Model::getConn()->lastInsertId();
