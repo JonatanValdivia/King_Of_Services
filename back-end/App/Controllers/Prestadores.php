@@ -25,6 +25,12 @@ Class Prestadores extends Controller{
     $json = file_get_contents("php://input");
     $modelPrestador = $this->model("Prestador");
     $dadosInsercao = json_decode($json);
+    $file_chunks = explode(";base64,", $dadosInsercao->foto);
+    $fileType = explode("image/", $file_chunks[0]);
+    $image_type = $fileType[1];
+    $base64Img = base64_decode($file_chunks[1]);
+    $file = uniqid().'.'.$image_type;
+    file_put_contents($file, $base64Img); 
     $modelPrestador->idProfissao = $dadosInsercao->idProfissao;
     $modelPrestador->idSexo = $dadosInsercao->idSexo;
     $modelPrestador->nome = $dadosInsercao->nome;
@@ -33,10 +39,8 @@ Class Prestadores extends Controller{
     $modelPrestador->descricao = $dadosInsercao->descricao;
     $modelPrestador->telefone = $dadosInsercao->telefone;
     $modelPrestador->dataNascimento = $dadosInsercao->dataNascimento;
-    $modelPrestador->foto = $dadosInsercao->foto;
-
+    $modelPrestador->foto =  $file;
     //passar o id da profissao
-
     $modelPrestador->criarPrestador();
     
     $modelEnderecoPrestador = $this->model("EnderecoPrestador");

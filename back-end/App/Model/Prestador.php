@@ -10,7 +10,13 @@ Class Prestador{
   public $nome;
   public $email;
   public $senha;
-  public $Endereco;
+  public $uf;
+  public $cidade;
+  public $bairro;
+  public $rua;
+  public $numero;
+  public $complemento;
+  public $cep;
   public $descricao;
   public $telefone;
   public $dataNascimento;
@@ -85,7 +91,13 @@ Class Prestador{
       $resultado = $stmt->fetch(\PDO::FETCH_OBJ);
       $this->idPrestador = $resultado->idPrestador;
       $this->idSexo = $resultado->sexo;
-      $this->Endereco = ["uf" => $resultado->uf, "cidade" =>  $resultado->cidade, "bairro" => $resultado->bairro, "rua" =>  $resultado->rua, "numero" => $resultado->numero, "complemento" => $resultado->complemento, "CEP" => $resultado->CEP];
+      $this->uf = $resultado->uf;
+      $this->cidade = $resultado->cidade;
+      $this->bairro = $resultado->bairro;
+      $this->rua = $resultado->rua;
+      $this->numero = $resultado->numero;
+      $this->complemento = $resultado->complemento;
+      $this->cep = $resultado->CEP;
       $this->idProfissao = $resultado->profissao;
       $this->nome = $resultado->nome;
       $this->descricao = $resultado->descricao;
@@ -125,14 +137,12 @@ Class Prestador{
 
       if($stmt->execute()){
         $this->idPrestador = Model::getConn()->lastInsertId();
-        echo json_encode($this);
+        // echo json_encode($this->foto);
         return $this;
       }else{
         return false;
       }
-    }
-
-    
+    } 
   }
   
   public function atualizar(){
@@ -157,10 +167,11 @@ Class Prestador{
     }
   }
 
-
   public function pesquisarProfissao($profissao){
-    $sql = "SELECT tblprestadores.nome as nome, 
-    tblprestadores.dataNascimento as dataNascimento, 
+    $sql = "SELECT tblprestadores.idPrestador as idPrestador,
+    tblprestadores.nome as nome, 
+    date_format(dataNascimento, '%d/%m/%Y') as dataNascimento, 
+	  YEAR(CURDATE()) - YEAR(dataNascimento) as idade,
     tblsexo.descricao as sexo,
     tblEnderecoPrestadores.uf as estado,
     tblEnderecoPrestadores.cidade as cidade,
@@ -172,9 +183,10 @@ Class Prestador{
     tblprestadores.email as email,
     tblprestadores.telefone as Telefone,
     tblprofissao.nomeProfissao as nomeProfissao,
-    tblPrestadores.descricao as descricao
+    tblPrestadores.descricao as descricao,
+    tblPrestadores.foto as foto
     from tblprestadores left join tblprofissao
-	on tblprofissao.idProfissao = tblPrestadores.idProfissao
+	  on tblprofissao.idProfissao = tblPrestadores.idProfissao
     left join tblEnderecoPrestadores 
     on tblprestadores.idPrestador = tblEnderecoPrestadores.idPrestador
     left join tblsexo
