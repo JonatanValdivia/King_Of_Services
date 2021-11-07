@@ -1,6 +1,7 @@
 <?php
 
 use App\Core\Controller;
+use BrunoMoraisTI\JwtToken;
 
 Class Logins extends Controller{
 
@@ -11,14 +12,19 @@ Class Logins extends Controller{
     $modelPrestador->email = $dadosComparacao->email;
     $modelPrestador->senha = $dadosComparacao->senha;
     if($modelPrestador->loginPrestador()){
-      echo json_encode($modelPrestador);
+      $jwtToken = new JwtToken("12345","localhost");
+      // echo json_encode($modelPrestador);
+      $horas = 2;
+      echo $jwtToken->encode($modelPrestador, $horas);
       return true;
     }else{
       $modelCliente = $this->model("Cliente");
       $modelCliente->email = $dadosComparacao->email;
       $modelCliente->senha = $dadosComparacao->senha;
       if($modelCliente->loginCliente()){
-        echo json_encode($modelCliente);
+        $jwtToken = new JwtToken("12345","localhost");
+        // echo json_encode($modelCliente);
+        echo $jwtToken->encode($modelPrestador, 1);
         return true;
       }else{
         $erro = ["Erro" => "E-mail e/ou senha inválido(s)"]; 

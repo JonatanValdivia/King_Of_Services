@@ -1,0 +1,41 @@
+<?php return array(
+    'root' => array(
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'type' => 'library',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'reference' => 'b92b4dc489a7bdd3700297ef017bf5fcef2557b6',
+        'name' => 'jonatan/back-end',
+        'dev' => true,
+    ),
+    'versions' => array(
+        'brunomoraisti/jwt-token' => array(
+            'pretty_version' => '1.4',
+            'version' => '1.4.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../brunomoraisti/jwt-token',
+            'aliases' => array(),
+            'reference' => 'c25c57b0d5fd25137ed9480b27e746612ee14c4e',
+            'dev_requirement' => false,
+        ),
+        'firebase/php-jwt' => array(
+            'pretty_version' => 'v5.4.0',
+            'version' => '5.4.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../firebase/php-jwt',
+            'aliases' => array(),
+            'reference' => 'd2113d9b2e0e349796e72d2a63cf9319100382d2',
+            'dev_requirement' => false,
+        ),
+        'jonatan/back-end' => array(
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'reference' => 'b92b4dc489a7bdd3700297ef017bf5fcef2557b6',
+            'dev_requirement' => false,
+        ),
+    ),
+);

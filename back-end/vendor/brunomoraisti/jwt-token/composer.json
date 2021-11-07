@@ -1,0 +1,22 @@
+{
+    "name": "brunomoraisti/jwt-token",
+    "description": "Generation and control of jwt token",
+    "type": "library",
+    "require": {
+        "firebase/php-jwt": "^5.2"
+    },
+    "require-dev": {
+        "firebase/php-jwt": "^5.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "BrunoMoraisTI\\": "src"
+        }
+    },
+    "authors": [
+        {
+            "name": "Bruno Morais",
+            "email": "brunomoraisti@gmail.com"
+        }
+    ]
+}
