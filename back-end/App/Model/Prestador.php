@@ -223,6 +223,7 @@ Class Prestador{
         return false;
       }else{
         $this->idPrestador = $resultado->idPrestador;
+        $this->nome = $resultado->nome;
         $this->senha = password_hash($resultado->senha, PASSWORD_DEFAULT);
         return $this;
       }

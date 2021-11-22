@@ -1,3 +1,7 @@
+create database king_of_services;
+
+use king_of_services;
+
 create table tblSexo(
 	idSexo int not null auto_increment primary key,
     sigla varchar(2) not null,
@@ -134,6 +138,55 @@ SELECT tblprestadores.nome as nome,
     left join tblsexo
     on tblprestadores.idsexo = tblsexo.idsexo
     where tblprofissao.nomeProfissao like '%A%';
+    
+    SELECT tblprestadores.nome as nome, 
+    date_format(dataNascimento, '%d/%m/%Y') as dataNascimento, 
+	YEAR(CURDATE()) - YEAR(dataNascimento) as idade,
+    tblsexo.descricao as sexo,
+    tblEnderecoPrestadores.uf as estado,
+    tblEnderecoPrestadores.cidade as cidade,
+    tblEnderecoPrestadores.bairro as bairro, 
+    tblEnderecoPrestadores.rua as rua, 
+    tblEnderecoPrestadores.numero as numero, 
+    tblEnderecoPrestadores.complemento as complemento,
+    tblEnderecoPrestadores.cep as CEP, 
+    tblprestadores.email as email,
+    tblprestadores.telefone as Telefone,
+    tblprofissao.nomeProfissao as nomeProfissao,
+    tblPrestadores.descricao as descricao,
+    tblprestadores.foto as foto
+    from tblprestadores left join tblprofissao
+	on tblprofissao.idProfissao = tblPrestadores.idProfissao
+    left join tblEnderecoPrestadores 
+    on tblprestadores.idPrestador = tblEnderecoPrestadores.idPrestador
+    left join tblsexo
+    on tblprestadores.idsexo = tblsexo.idsexo
+    where tblprestadores.email = 'jonatan.viniciusvaldivia@outlook.com';
+    
+    SELECT tblprestadores.nome as nome, 
+    date_format(dataNascimento, '%d/%m/%Y') as dataNascimento, 
+	  YEAR(CURDATE()) - YEAR(dataNascimento) as idade,
+    tblsexo.descricao as sexo,
+    tblEnderecoPrestadores.uf as estado,
+    tblEnderecoPrestadores.cidade as cidade,
+    tblEnderecoPrestadores.bairro as bairro, 
+    tblEnderecoPrestadores.rua as rua, 
+    tblEnderecoPrestadores.numero as numero, 
+    tblEnderecoPrestadores.complemento as complemento,
+    tblEnderecoPrestadores.cep as CEP, 
+    tblprestadores.email as email,
+    tblprestadores.email as senha,
+    tblprestadores.telefone as telefone,
+    tblprofissao.nomeProfissao as nomeProfissao,
+    tblPrestadores.descricao as descricao,
+    tblprestadores.foto as foto
+    from tblprestadores left join tblprofissao
+	  on tblprofissao.idProfissao = tblPrestadores.idProfissao
+    left join tblEnderecoPrestadores 
+    on tblprestadores.idPrestador = tblEnderecoPrestadores.idPrestador
+    left join tblsexo
+    on tblprestadores.idsexo = tblsexo.idsexo
+    where tblprestadores.email = 'jonatan.viniciusvaldivia@outlook.com';
 
 ##################################################################################
 
@@ -178,8 +231,6 @@ insert into tblprofissao (nomeProfissao) values ('Pintor');
 
 #Atualização
 
-
-
 ##################################################################################
 
 create table tblEnderecoPrestadores (
@@ -212,7 +263,7 @@ insert into tblEnderecoPrestadores (idPrestador, uf, cidade, bairro, rua, numero
 
 #seleção
 
-select tblEnderecoPrestadores.idEndereco, 
+select tblEnderecoPrestadores.idEnderecoPrestador, 
 tblEnderecoPrestadores.idPrestador, 
 tblprestadores.nome as nomePrestador, 
 tblEnderecoPrestadores.uf, 
@@ -225,7 +276,6 @@ tblEnderecoPrestadores.cep
 from tblEnderecoPrestadores inner join tblprestadores
 on tblEnderecoPrestadores.idPrestador = tblprestadores.idPrestador;
 
-
 select idEnderecoPrestador, idPrestador, uf, cidade, bairro, rua, numero, complemento, cep from tblEnderecoPrestadores;
 
 select uf, cidade, bairro, rua, numero, complemento, cep from tblendereco where idEndereco = 1;
@@ -234,7 +284,6 @@ INSERT into tblEnderecoPrestadores (idPrestador, uf, cidade, bairro, rua, numero
     values (2, 'SP', 'Tatuí', 'Vila Monte Verde', 'Maria Ordália Teles', '174', '', '18279692');
 
 #Atualização
-
 
 ##################################################################################
 
@@ -260,13 +309,16 @@ create table tblClientes (
 
 #seleção
 
+select * from tblclientes;
+
 select tblclientes.idCliente, 
 tblclientes.nome,
 tblsexo.descricao as sexo,  
 date_format(dataNascimento, '%d/%m/%Y') as dataNascimento, 
 YEAR(CURDATE()) - YEAR(dataNascimento) as idade,
 tblclientes.email, 
-tblclientes.senha, 
+tblclientes.senha,
+tblclientes.descricao, 
 tblclientes.telefone, 
 tblEnderecoClientes.uf as uf, 
 tblEnderecoClientes.cidade as cidade, 
@@ -275,11 +327,12 @@ tblEnderecoClientes.rua as rua,
 tblEnderecoClientes.numero as numero, 
 tblEnderecoClientes.complemento as complemento, 
 tblEnderecoClientes.cep as CEP,
+date_format(tblclientes.registro, '%d/%m/%Y') as registro,
 tblclientes.foto from tblclientes inner join tblSexo on
 tblclientes.idSexo = tblsexo.idSexo
-inner join tblenderecoclientes on 
-tblenderecoclientes.idCliente = tblclientes.idCliente;
-
+right join tblenderecoclientes on 
+tblenderecoclientes.idCliente = tblclientes.idCliente 
+where tblclientes.email = 'teste123@gmail.com';
 
 #Busca pelo id
 
@@ -289,7 +342,8 @@ tblsexo.descricao as sexo,
 date_format(dataNascimento, '%d/%m/%Y') as dataNascimento, 
 YEAR(CURDATE()) - YEAR(dataNascimento) as idade,
 tblclientes.email, 
-tblclientes.senha, 
+tblclientes.senha,
+tblclientes.descricao, 
 tblclientes.telefone, 
 tblEnderecoClientes.uf as uf, 
 tblEnderecoClientes.cidade as cidade, 
@@ -298,9 +352,10 @@ tblEnderecoClientes.rua as rua,
 tblEnderecoClientes.numero as numero, 
 tblEnderecoClientes.complemento as complemento, 
 tblEnderecoClientes.cep as CEP,
+date_format(tblclientes.registro, '%d/%m/%Y') as registro,
 tblclientes.foto from tblclientes inner join tblSexo on
 tblclientes.idSexo = tblsexo.idSexo
-inner join tblenderecoclientes on 
+right join tblenderecoclientes on 
 tblenderecoclientes.idCliente = tblclientes.idCliente
 where tblClientes.idCliente = 1;
 #Inserção 
@@ -335,6 +390,10 @@ create table tblEnderecoClientes (
 ##CRUD tblEnderecoClientes
 ###################################
 
+#insert
+insert into tblclientes (idSexo, nome, email, senha, telefone, dataNascimento, foto) values 
+(1, 'Teste', 'teste.teste@outlook.com', '0000', '(11)0000-4454', '2003-08-18', 01010101);
+
 #seleção
 select tblEnderecoClientes.idEnderecoCliente, 
 tblEnderecoClientes.idCliente, 
@@ -362,7 +421,6 @@ tblEnderecoClientes.cep
 from tblEnderecoClientes inner join tblClientes
 on tblEnderecoClientes.idCliente = tblClientes.idCliente
 where tblenderecoclientes.idEnderecoCliente = 1;
-
 
 #inserção
 
@@ -409,3 +467,132 @@ ALTER TABLE tblprestadores
 CHANGE foto foto text;
 ALTER TABLE tblclientes
 CHANGE foto foto VARCHAR(500);
+
+#Novas alterações necessárias
+ALTER TABLE tblclientes ADD COLUMN descricao VARCHAR(500) after senha;
+ALTER TABLE tblclientes ADD COLUMN registro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP after foto;
+ALTER TABLE tblprestadores ADD COLUMN registro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP after foto;
+
+###Zerar o banco de dados: -> executar os seguintes comandos tendo em vista e certeza que há correção dos scripts
+SET foreign_key_checks=off; ##Limpa todas as possíveis chaves estrangeiras das tabelas
+SELECT concat('DROP TABLE IF EXISTS ', TABLE_NAME, ';') FROM information_schema.TABLES; ##Dropa todas as tabelas do banco de dados
+
+/**
+	INSERTS PARA A TBLPROFISSAO
+*/
+
+insert into tblProfissao (nomeProfissao) values ('Acupuntor ');
+insert into tblProfissao (nomeProfissao) values ('Administrador');
+insert into tblProfissao (nomeProfissao) values ('Advogado');
+insert into tblProfissao (nomeProfissao) values ('Alfaiate');
+insert into tblProfissao (nomeProfissao) values ('Analista');
+insert into tblProfissao (nomeProfissao) values ('Analista');
+insert into tblProfissao (nomeProfissao) values ('Animador');
+insert into tblProfissao (nomeProfissao) values ('Anotador');
+insert into tblProfissao (nomeProfissao) values ('Apresentador');
+insert into tblProfissao (nomeProfissao) values ('Arlegista');
+insert into tblProfissao (nomeProfissao) values ('Artezao');
+insert into tblProfissao (nomeProfissao) values ('Astrologo');
+insert into tblProfissao (nomeProfissao) values ('Astronomo');
+insert into tblProfissao (nomeProfissao) values ('Ator');
+insert into tblProfissao (nomeProfissao) values ('Barbeiro');
+insert into tblProfissao (nomeProfissao) values ('Bibliotecario');
+insert into tblProfissao (nomeProfissao) values ('Botanico');
+insert into tblProfissao (nomeProfissao) values ('Cabalaireiro');
+insert into tblProfissao (nomeProfissao) values ('Calista');
+insert into tblProfissao (nomeProfissao) values ('Cantor');
+insert into tblProfissao (nomeProfissao) values ('Cardiologista');
+insert into tblProfissao (nomeProfissao) values ('Carpinteiro');
+insert into tblProfissao (nomeProfissao) values ('Compositor');
+insert into tblProfissao (nomeProfissao) values ('Cozinheiro');
+insert into tblProfissao (nomeProfissao) values ('Cuidador');
+insert into tblProfissao (nomeProfissao) values ('Decorador');
+insert into tblProfissao (nomeProfissao) values ('Dentista');
+insert into tblProfissao (nomeProfissao) values ('Desenhista');
+insert into tblProfissao (nomeProfissao) values ('Design');
+insert into tblProfissao (nomeProfissao) values ('Destrador');
+insert into tblProfissao (nomeProfissao) values ('Developer');
+insert into tblProfissao (nomeProfissao) values ('Diarista');
+insert into tblProfissao (nomeProfissao) values ('Eletricista');
+insert into tblProfissao (nomeProfissao) values ('Engenheiro ');
+insert into tblProfissao (nomeProfissao) values ('Escritor');
+insert into tblProfissao (nomeProfissao) values ('Estilista');
+insert into tblProfissao (nomeProfissao) values ('Faxineira');
+insert into tblProfissao (nomeProfissao) values ('Figurinista');
+insert into tblProfissao (nomeProfissao) values ('Fisico');
+insert into tblProfissao (nomeProfissao) values ('Florista');
+insert into tblProfissao (nomeProfissao) values ('Forjador');
+insert into tblProfissao (nomeProfissao) values ('Fotógrafo');
+insert into tblProfissao (nomeProfissao) values ('Gerente');
+insert into tblProfissao (nomeProfissao) values ('Gestor');
+insert into tblProfissao (nomeProfissao) values ('Historiador');
+insert into tblProfissao (nomeProfissao) values ('Homeopata');
+insert into tblProfissao (nomeProfissao) values ('Jardineiro');
+insert into tblProfissao (nomeProfissao) values ('Joalheiro');
+insert into tblProfissao (nomeProfissao) values ('Locutor');
+insert into tblProfissao (nomeProfissao) values ('Maestro');
+insert into tblProfissao (nomeProfissao) values ('Magico');
+insert into tblProfissao (nomeProfissao) values ('Maquiador');
+insert into tblProfissao (nomeProfissao) values ('Maquinista');
+insert into tblProfissao (nomeProfissao) values ('Marceneiro');
+insert into tblProfissao (nomeProfissao) values ('Matematico');
+insert into tblProfissao (nomeProfissao) values ('Medico');
+insert into tblProfissao (nomeProfissao) values ('Mergulhador');
+insert into tblProfissao (nomeProfissao) values ('Modelo');
+insert into tblProfissao (nomeProfissao) values ('Motorista');
+insert into tblProfissao (nomeProfissao) values ('Músico');
+insert into tblProfissao (nomeProfissao) values ('Numerologo');
+insert into tblProfissao (nomeProfissao) values ('Nutricionista ');
+insert into tblProfissao (nomeProfissao) values ('Obstreta');
+insert into tblProfissao (nomeProfissao) values ('Oleiro');
+insert into tblProfissao (nomeProfissao) values ('Operador');
+insert into tblProfissao (nomeProfissao) values ('Ortopedista');
+insert into tblProfissao (nomeProfissao) values ('Padeiro');
+insert into tblProfissao (nomeProfissao) values ('Palhaço');
+insert into tblProfissao (nomeProfissao) values ('Pedreiro');
+insert into tblProfissao (nomeProfissao) values ('Pedreiro');
+insert into tblProfissao (nomeProfissao) values ('Perfumista');
+insert into tblProfissao (nomeProfissao) values ('Personal');
+insert into tblProfissao (nomeProfissao) values ('Pianista');
+insert into tblProfissao (nomeProfissao) values ('Polidor');
+insert into tblProfissao (nomeProfissao) values ('Porteiro');
+insert into tblProfissao (nomeProfissao) values ('Produtor');
+insert into tblProfissao (nomeProfissao) values ('Professor');
+insert into tblProfissao (nomeProfissao) values ('Psicologo');
+insert into tblProfissao (nomeProfissao) values ('Psiquiatra');
+insert into tblProfissao (nomeProfissao) values ('Queijeiro');
+insert into tblProfissao (nomeProfissao) values ('Restaurador');
+insert into tblProfissao (nomeProfissao) values ('Roteirista');
+insert into tblProfissao (nomeProfissao) values ('Sapateiro');
+insert into tblProfissao (nomeProfissao) values ('Seguranca');
+insert into tblProfissao (nomeProfissao) values ('Serralheiro');
+insert into tblProfissao (nomeProfissao) values ('Soldador');
+insert into tblProfissao (nomeProfissao) values ('Tarologo');
+insert into tblProfissao (nomeProfissao) values ('Terapeuta');
+insert into tblProfissao (nomeProfissao) values ('Tradutor');
+insert into tblProfissao (nomeProfissao) values ('Treinador');
+insert into tblProfissao (nomeProfissao) values ('Ui');
+insert into tblProfissao (nomeProfissao) values ('Ux');
+insert into tblProfissao (nomeProfissao) values ('Vendedor');
+insert into tblProfissao (nomeProfissao) values ('Veterinario');
+insert into tblProfissao (nomeProfissao) values ('Vigilante');
+insert into tblProfissao (nomeProfissao) values ('Zelador');
+
+
+create table tblServicosPrestador(
+	idServicoPrestador int not null primary key,
+    unique key (idServicoPrestador),
+    idPrestador int not null, 
+    idCliente int not null,
+    StatusServico enum ('aceitar','pendente','concluido'),
+    
+    constraint FK_idPrestador_tblServicosPrestador
+    foreign key (idPrestador)
+    references tblprestadores (idPrestador),
+    
+    constraint FK_idCliente_tblServicosPrestador
+    foreign key (idCliente)
+    references tblClientes (idCliente)
+);
+
+desc tblServicosPrestador;

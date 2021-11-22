@@ -9,7 +9,7 @@ class Profissao{
   public $nomeProfissao;
 
   public function listarTodasProfissoes(){
-    $sql = "SELECT idProfissao, nomeProfissao from tblprofissao;";
+    $sql = "SELECT idProfissao, nomeProfissao from tblprofissao order by nomeProfissao;";
 
     $stmt = Model::getConn()->prepare($sql);
     $stmt->execute();

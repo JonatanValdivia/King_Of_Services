@@ -9,11 +9,12 @@ class Cliente{
   public $nome;
   public $email;
   public $senha;
+  public $descricao;
   public $telefone;
-  public $Endereco;
   public $dataNascimento;
   public $idade;
   public $foto;
+  public $registro;
 
   public function listarTodos(){
 
@@ -23,7 +24,8 @@ class Cliente{
     date_format(dataNascimento, '%d/%m/%Y') as dataNascimento, 
     YEAR(CURDATE()) - YEAR(dataNascimento) as idade,
     tblclientes.email, 
-    tblclientes.senha, 
+    tblclientes.senha,
+    tblclientes.descricao, 
     tblclientes.telefone, 
     tblEnderecoClientes.uf as uf, 
     tblEnderecoClientes.cidade as cidade, 
@@ -32,9 +34,10 @@ class Cliente{
     tblEnderecoClientes.numero as numero, 
     tblEnderecoClientes.complemento as complemento, 
     tblEnderecoClientes.cep as CEP,
+    date_format(tblclientes.registro, '%d/%m/%Y') as registro,
     tblclientes.foto from tblclientes inner join tblSexo on
     tblclientes.idSexo = tblsexo.idSexo
-    inner join tblenderecoclientes on 
+    right join tblenderecoclientes on 
     tblenderecoclientes.idCliente = tblclientes.idCliente;";
 
     $stmt = Model::getConn()->prepare($slq);
@@ -54,6 +57,8 @@ class Cliente{
     date_format(dataNascimento, '%d/%m/%Y') as dataNascimento, 
     YEAR(CURDATE()) - YEAR(dataNascimento) as idade,
     tblclientes.email, 
+    tblclientes.senha,
+    tblclientes.descricao, 
     tblclientes.telefone, 
     tblEnderecoClientes.uf as uf, 
     tblEnderecoClientes.cidade as cidade, 
@@ -62,9 +67,10 @@ class Cliente{
     tblEnderecoClientes.numero as numero, 
     tblEnderecoClientes.complemento as complemento, 
     tblEnderecoClientes.cep as CEP,
+    date_format(tblclientes.registro, '%d/%m/%Y') as registro,
     tblclientes.foto from tblclientes inner join tblSexo on
     tblclientes.idSexo = tblsexo.idSexo
-    inner join tblenderecoclientes on 
+    right join tblenderecoclientes on 
     tblenderecoclientes.idCliente = tblclientes.idCliente
     where tblClientes.idCliente = :id;";
     $stmt = Model::getConn()->prepare($sql);
@@ -74,13 +80,21 @@ class Cliente{
       $resultado = $stmt->fetch(\PDO::FETCH_OBJ);
       $this->idCliente = $resultado->idCliente;
       $this->idSexo = $resultado->sexo;
-      $this->Endereco = ["uf" => $resultado->uf, "cidade" =>  $resultado->cidade, "bairro" => $resultado->bairro, "rua" =>  $resultado->rua, "numero" => $resultado->numero, "complemento" => $resultado->complemento, "CEP" => $resultado->CEP];
+      $this->uf = $resultado->uf;
+      $this->cidade = $resultado->cidade;
+      $this->bairro = $resultado->bairro;
+      $this->rua =  $resultado->rua;
+      $this->numero = $resultado->numero;
+      $this->complemento = $resultado->complemento;
+      $this->CEP = $resultado->CEP;
       $this->nome = $resultado->nome;
       $this->email = $resultado->email;
       $this->telefone = $resultado->telefone;
       $this->dataNascimento = $resultado->dataNascimento;
       $this->idade = $resultado->idade;
       $this->foto = $resultado->foto;
+      $this->registro = $resultado->registro;
+      $this->descricao = $resultado->descricao;
       return $this;
     }else{
       return [];
@@ -116,18 +130,17 @@ class Cliente{
       }else{
         return false;
       }
-    }
-
-    
+    } 
   }
 
   public function atualizar(){
-    $sql = "UPDATE tblclientes set idSexo = :idSexo, nome = :nome, email = :email, senha = :senha, telefone = :telefone, dataNascimento = :dataNascimento, foto = :foto where idCliente = :idCliente;";
+    $sql = "UPDATE tblclientes set idSexo = :idSexo, nome = :nome, email = :email, senha = :senha, descricao = :descricao, telefone = :telefone, dataNascimento = :dataNascimento, foto = :foto where idCliente = :idCliente;";
     $stmt = Model::getConn()->prepare($sql);
     $stmt->bindValue(':idSexo', $this->idSexo);
     $stmt->bindValue(':nome', $this->nome);
     $stmt->bindValue(':email', $this->email);
     $stmt->bindValue(':senha', password_hash($this->senha, PASSWORD_DEFAULT));
+    $stmt->bindValue(':descricao', $this->descricao);
     $stmt->bindValue(':telefone', $this->telefone);
     $stmt->bindValue(':dataNascimento', $this->dataNascimento);
     $stmt->bindValue(':foto', $this->foto);
@@ -149,15 +162,13 @@ class Cliente{
     $stmt = Model::getConn()->prepare($sql);
     $stmt->bindValue(":email", $this->email);
     $stmt->execute();
-    
     if($stmt->rowCount() > 0){
-     
       $resultado = $stmt->fetch(\PDO::FETCH_OBJ);
-      // echo json_encode($resultado);
       if(!password_verify($this->senha, $resultado->senha) || $this->email != $resultado->email){
         return false;
       }else{
         $this->idCliente = $resultado->idCliente;
+        $this->nome = $resultado->nome;
         $this->senha = password_hash($resultado->senha, PASSWORD_DEFAULT);
         return $this;
       }

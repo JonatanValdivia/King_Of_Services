@@ -67,6 +67,7 @@ Class Clientes extends Controller{
     $modelCliente->nome = $dadosEdicao->nome;
     $modelCliente->email = $dadosEdicao->email;
     $modelCliente->senha = $dadosEdicao->senha;
+    $modelCliente->descricao = $dadosEdicao->descricao;
     $modelCliente->telefone = $dadosEdicao->telefone;
     $modelCliente->dataNascimento = $dadosEdicao->dataNascimento;
     $modelCliente->foto = $dadosEdicao->foto;
