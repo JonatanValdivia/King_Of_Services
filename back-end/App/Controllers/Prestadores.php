@@ -40,9 +40,7 @@ Class Prestadores extends Controller{
     $modelPrestador->telefone = $dadosInsercao->telefone;
     $modelPrestador->dataNascimento = $dadosInsercao->dataNascimento;
     $modelPrestador->foto =  $file;
-    //passar o id da profissao
     $modelPrestador->criarPrestador();
-    
     $modelEnderecoPrestador = $this->model("EnderecoPrestador");
     $modelEnderecoPrestador->idPrestador = $modelPrestador->idPrestador;
     $modelEnderecoPrestador->uf = $dadosInsercao->uf;
@@ -62,6 +60,9 @@ Class Prestadores extends Controller{
 
   public function update($id){
     $json = file_get_contents("php://input");
+    // echo '<pre>';
+    // var_dump($json);
+    // exit();
     $modelPrestador = $this->model("Prestador");
     $modelPrestador->procurarPorId($id);
     if(!$modelPrestador){
@@ -72,22 +73,46 @@ Class Prestadores extends Controller{
     } 
 
     $dadosEdicao = json_decode($json);
+    
+    $file_chunks = explode(";base64,", $dadosEdicao->foto);
+    $fileType = explode("image/", $file_chunks[0]);
+    $image_type = $fileType[1];
+    $base64Img = base64_decode($file_chunks[1]);
+    $file = uniqid().'.'.$image_type;
+    file_put_contents($file, $base64Img);
+    $modelPrestador->foto = $file;
+    
+
+    //$modelPrestador->foto já esta setado por conta do $modelPrestador->procurarPorId($id);
     $modelPrestador->idProfissao = $dadosEdicao->idProfissao;
     $modelPrestador->idSexo = $dadosEdicao->idSexo;
     $modelPrestador->nome = $dadosEdicao->nome;
     $modelPrestador->email = $dadosEdicao->email;
-    $modelPrestador->senha = $dadosEdicao->senha;
     $modelPrestador->descricao = $dadosEdicao->descricao;
     $modelPrestador->telefone = $dadosEdicao->telefone;
     $modelPrestador->dataNascimento = $dadosEdicao->dataNascimento;
-    $modelPrestador->foto = $dadosEdicao->foto;
-    if($modelPrestador->atualizar()){
-      http_response_code(204);
-    }else{
-      http_response_code(500);
-      $erro = ["erro" => "Problemas ao editar o cliente"];
-      echo json_encode($erro, JSON_UNESCAPED_UNICODE);
-    }
+    $modelPrestador->atualizar();
+    // echo '<pre>';
+    // var_dump($modelPrestador);
+    // exit();
+
+    $modelEnderecoPrestador = $this->model("EnderecoPrestador");
+    $modelEnderecoPrestador->idEnderecoPrestador = $modelPrestador->idEndereco;
+    $modelEnderecoPrestador->uf = $dadosEdicao->uf;
+    $modelEnderecoPrestador->cidade = $dadosEdicao->cidade;
+    $modelEnderecoPrestador->bairro = $dadosEdicao->bairro;
+    $modelEnderecoPrestador->rua = $dadosEdicao->rua;
+    $modelEnderecoPrestador->numero = $dadosEdicao->numero;
+    $modelEnderecoPrestador->complemento = $dadosEdicao->complemento;
+    $modelEnderecoPrestador->cep = $dadosEdicao->cep;
+    $modelEnderecoPrestador->atualizar();
+    // if($modelPrestador->atualizar()){
+    //   http_response_code(204);
+    // }else{
+    //   http_response_code(500);
+    //   $erro = ["erro" => "Problemas ao editar o cliente"];
+    //   echo json_encode($erro, JSON_UNESCAPED_UNICODE);
+    // }
     return $modelPrestador;
   }
 

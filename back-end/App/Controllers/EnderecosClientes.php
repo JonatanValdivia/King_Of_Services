@@ -40,33 +40,33 @@ class EnderecosClientes extends Controller{
   //   return $modelEnderecoCLiente;
   // }
 
-  public function update($id){
-    $json = file_get_contents("php://input");
-    $dadosEdicao = json_decode($json);
-    $modelEnderecoCLiente = $this->model("EnderecoCliente");
-    $modelEnderecoCLiente->buscarEnderecoCLientePeloId($id);
-    if(!$modelEnderecoCLiente){
-      http_response_code(404);
-      $erro = ["erro" => "Cliente não encontrado"];
-      echo json_encode($erro);
-      exit;
-    }
-    $modelEnderecoCLiente->idCliente = $dadosEdicao->idCliente;
-    $modelEnderecoCLiente->uf = $dadosEdicao->uf;
-    $modelEnderecoCLiente->cidade = $dadosEdicao->cidade;
-    $modelEnderecoCLiente->bairro = $dadosEdicao->bairro;
-    $modelEnderecoCLiente->rua = $dadosEdicao->rua;
-    $modelEnderecoCLiente->numero = $dadosEdicao->numero;
-    $modelEnderecoCLiente->complemento = $dadosEdicao->complemento;
-    $modelEnderecoCLiente->cep = $dadosEdicao->cep;
-   if($modelEnderecoCLiente->updateEnderecoCliente()){
-    http_response_code(204);
-   }else{
-    http_response_code(500);
-    $erro = ["erro" => "Problemas ao editar o cliente"];
-    echo json_encode($erro, JSON_UNESCAPED_UNICODE);
-   }
-  }
+  // public function update($id){
+  //   $json = file_get_contents("php://input");
+  //   $dadosEdicao = json_decode($json);
+  //   $modelEnderecoCLiente = $this->model("EnderecoCliente");
+  //   $modelEnderecoCLiente->buscarEnderecoCLientePeloId($id);
+  //   if(!$modelEnderecoCLiente){
+  //     http_response_code(404);
+  //     $erro = ["erro" => "Cliente não encontrado"];
+  //     echo json_encode($erro);
+  //     exit;
+  //   }
+  //   $modelEnderecoCLiente->idCliente = $dadosEdicao->idCliente;
+  //   $modelEnderecoCLiente->uf = $dadosEdicao->uf;
+  //   $modelEnderecoCLiente->cidade = $dadosEdicao->cidade;
+  //   $modelEnderecoCLiente->bairro = $dadosEdicao->bairro;
+  //   $modelEnderecoCLiente->rua = $dadosEdicao->rua;
+  //   $modelEnderecoCLiente->numero = $dadosEdicao->numero;
+  //   $modelEnderecoCLiente->complemento = $dadosEdicao->complemento;
+  //   $modelEnderecoCLiente->cep = $dadosEdicao->cep;
+  //  if($modelEnderecoCLiente->updateEnderecoCliente()){
+  //   http_response_code(204);
+  //  }else{
+  //   http_response_code(500);
+  //   $erro = ["erro" => "Problemas ao editar o cliente"];
+  //   echo json_encode($erro, JSON_UNESCAPED_UNICODE);
+  //  }
+  // }
 
   public function delete($id){
     $modelEnderecoCLiente = $this->model("EnderecoCliente");

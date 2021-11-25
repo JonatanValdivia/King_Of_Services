@@ -1,7 +1,7 @@
 <?php
 
 use App\Core\Controller;
-//
+
 Class Clientes extends Controller{
 
   public function index(){
@@ -63,6 +63,14 @@ Class Clientes extends Controller{
       exit;
     }
 
+    $dadosEdicao = json_decode($json);
+    $file_chunks = explode(";base64,", $dadosEdicao->foto);
+    $fileType = explode("image/", $file_chunks[0]);
+    $image_type = $fileType[1];
+    $base64Img = base64_decode($file_chunks[1]);
+    $file = uniqid().'.'.$image_type;
+    file_put_contents($file, $base64Img);
+
     $modelCliente->idSexo = $dadosEdicao->idSexo;
     $modelCliente->nome = $dadosEdicao->nome;
     $modelCliente->email = $dadosEdicao->email;
@@ -70,9 +78,19 @@ Class Clientes extends Controller{
     $modelCliente->descricao = $dadosEdicao->descricao;
     $modelCliente->telefone = $dadosEdicao->telefone;
     $modelCliente->dataNascimento = $dadosEdicao->dataNascimento;
-    $modelCliente->foto = $dadosEdicao->foto;
+    $modelCliente->foto = $file;
 
-    if($modelCliente->atualizar()){
+    $modelEnderecoCLiente = $this->model("EnderecoCliente");
+    $modelEnderecoCLiente->idCliente = $id;
+    $modelEnderecoCLiente->uf = $dadosEdicao->uf;
+    $modelEnderecoCLiente->cidade = $dadosEdicao->cidade;
+    $modelEnderecoCLiente->bairro = $dadosEdicao->bairro;
+    $modelEnderecoCLiente->rua = $dadosEdicao->rua;
+    $modelEnderecoCLiente->numero = $dadosEdicao->numero;
+    $modelEnderecoCLiente->complemento = $dadosEdicao->complemento;
+    $modelEnderecoCLiente->cep = $dadosEdicao->cep;
+
+    if($modelCliente->atualizar() && $modelEnderecoCLiente->updateEnderecoCliente()){
       http_response_code(204);
     }else{
       http_response_code(500);

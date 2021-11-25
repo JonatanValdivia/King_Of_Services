@@ -6,6 +6,7 @@ class Cliente{
 
   public $idCliente;
   public $idSexo;
+  public $sexo;
   public $nome;
   public $email;
   public $senha;
@@ -21,6 +22,7 @@ class Cliente{
     $slq = "SELECT tblclientes.idCliente, 
     tblclientes.nome,
     tblsexo.descricao as sexo,  
+    tblsexo.idSexo as idSexo,
     date_format(dataNascimento, '%d/%m/%Y') as dataNascimento, 
     YEAR(CURDATE()) - YEAR(dataNascimento) as idade,
     tblclientes.email, 
@@ -54,6 +56,7 @@ class Cliente{
     $sql = "SELECT tblclientes.idCliente, 
     tblclientes.nome,
     tblsexo.descricao as sexo,  
+    tblsexo.idSexo as idSexo,
     date_format(dataNascimento, '%d/%m/%Y') as dataNascimento, 
     YEAR(CURDATE()) - YEAR(dataNascimento) as idade,
     tblclientes.email, 
@@ -79,7 +82,7 @@ class Cliente{
     if($stmt->rowCount() > 0){
       $resultado = $stmt->fetch(\PDO::FETCH_OBJ);
       $this->idCliente = $resultado->idCliente;
-      $this->idSexo = $resultado->sexo;
+      $this->idSexo = $resultado->idSexo;
       $this->uf = $resultado->uf;
       $this->cidade = $resultado->cidade;
       $this->bairro = $resultado->bairro;

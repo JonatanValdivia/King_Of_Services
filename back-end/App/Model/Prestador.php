@@ -10,6 +10,7 @@ Class Prestador{
   public $nome;
   public $email;
   public $senha;
+  public $idEndereco;
   public $uf;
   public $cidade;
   public $bairro;
@@ -61,10 +62,12 @@ Class Prestador{
     $sql = "SELECT tblprestadores.idPrestador as idPrestador,
     tblprestadores.nome as nome,
     tblsexo.descricao as sexo, 
+    tblsexo.idSexo as idSexo,
     date_format(dataNascimento, '%d/%m/%Y') as dataNascimento, 
     YEAR(CURDATE()) - YEAR(dataNascimento) as idade,
     tblprestadores.email as email,
     tblprestadores.telefone as telefone,
+    tblEnderecoPrestadores.idEnderecoPrestador as idEndereco,
     tblEnderecoPrestadores.uf as uf, 
     tblEnderecoPrestadores.cidade as cidade, 
     tblEnderecoPrestadores.bairro as bairro, 
@@ -91,6 +94,7 @@ Class Prestador{
       $resultado = $stmt->fetch(\PDO::FETCH_OBJ);
       $this->idPrestador = $resultado->idPrestador;
       $this->idSexo = $resultado->sexo;
+      $this->idEndereco = $resultado->idEndereco;
       $this->uf = $resultado->uf;
       $this->cidade = $resultado->cidade;
       $this->bairro = $resultado->bairro;
@@ -105,6 +109,10 @@ Class Prestador{
       $this->telefone = $resultado->telefone;
       $this->dataNascimento = $resultado->dataNascimento;
       $this->foto = $resultado->foto;
+      // echo "<pre>";
+      // var_dump($this);
+      // echo "</pre>";
+      // exit;
       return $this;
     }else{
       return false;
@@ -146,14 +154,15 @@ Class Prestador{
   }
   
   public function atualizar(){
-    $sql = "UPDATE tblprestadores set idProfissao = :idProfissao, idSexo = :idSexo, nome = :nome, email = :email, senha = :senha, descricao = :descricao, telefone = :telefone, dataNascimento = :dataNascimento, foto = :foto
+
+    $sql = "UPDATE tblprestadores set idProfissao = :idProfissao, idSexo = :idSexo, nome = :nome, email = :email, descricao = :descricao, telefone = :telefone, dataNascimento = :dataNascimento, foto = :foto
     where idPrestador = :idPrestador;";
     $stmt = Model::getConn()->prepare($sql);
     $stmt->bindValue(":idProfissao", $this->idProfissao);
     $stmt->bindValue(":idSexo", $this->idSexo);
     $stmt->bindValue(":nome", $this->nome);
     $stmt->bindValue(":email", $this->email);
-    $stmt->bindValue(":senha", password_hash($this->senha, PASSWORD_DEFAULT));
+    // $stmt->bindValue(":senha", password_hash($this->senha, PASSWORD_DEFAULT));
     $stmt->bindValue(":descricao", $this->descricao);
     $stmt->bindValue(":telefone", $this->telefone);
     $stmt->bindValue(":dataNascimento", $this->dataNascimento);
