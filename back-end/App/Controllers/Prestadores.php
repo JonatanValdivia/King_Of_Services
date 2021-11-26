@@ -25,6 +25,7 @@ Class Prestadores extends Controller{
     $json = file_get_contents("php://input");
     $modelPrestador = $this->model("Prestador");
     $dadosInsercao = json_decode($json);
+    //Conversão da foto
     $file_chunks = explode(";base64,", $dadosInsercao->foto);
     $fileType = explode("image/", $file_chunks[0]);
     $image_type = $fileType[1];
@@ -38,7 +39,11 @@ Class Prestadores extends Controller{
     $modelPrestador->senha = $dadosInsercao->senha;
     $modelPrestador->descricao = $dadosInsercao->descricao;
     $modelPrestador->telefone = $dadosInsercao->telefone;
-    $modelPrestador->dataNascimento = $dadosInsercao->dataNascimento;
+    //Conversão da data
+    $data = explode('/', $dadosInsercao->dataNascimento);
+    $conversaoDaData = $data[2].'-'.$data[1].'-'.$data[0];
+    $modelPrestador->dataNascimento = $conversaoDaData;
+
     $modelPrestador->foto =  $file;
     $modelPrestador->criarPrestador();
     $modelEnderecoPrestador = $this->model("EnderecoPrestador");
@@ -91,6 +96,13 @@ Class Prestadores extends Controller{
     $modelPrestador->descricao = $dadosEdicao->descricao;
     $modelPrestador->telefone = $dadosEdicao->telefone;
     $modelPrestador->dataNascimento = $dadosEdicao->dataNascimento;
+    $data = explode('/', $dadosEdicao->dataNascimento);
+    $conversaoDaData = $data[2].'-'.$data[1].'-'.$data[0];
+    $modelPrestador->dataNascimento = $conversaoDaData;
+    echo "<pre>";
+    echo $modelPrestador->dataNascimento;
+    echo "</pre>";
+    exit();
     $modelPrestador->atualizar();
     // echo '<pre>';
     // var_dump($modelPrestador);

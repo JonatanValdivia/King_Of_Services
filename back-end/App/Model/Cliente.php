@@ -137,12 +137,11 @@ class Cliente{
   }
 
   public function atualizar(){
-    $sql = "UPDATE tblclientes set idSexo = :idSexo, nome = :nome, email = :email, senha = :senha, descricao = :descricao, telefone = :telefone, dataNascimento = :dataNascimento, foto = :foto where idCliente = :idCliente;";
+    $sql = "UPDATE tblclientes set idSexo = :idSexo, nome = :nome, email = :email, descricao = :descricao, telefone = :telefone, dataNascimento = :dataNascimento, foto = :foto where idCliente = :idCliente;";
     $stmt = Model::getConn()->prepare($sql);
     $stmt->bindValue(':idSexo', $this->idSexo);
     $stmt->bindValue(':nome', $this->nome);
     $stmt->bindValue(':email', $this->email);
-    $stmt->bindValue(':senha', password_hash($this->senha, PASSWORD_DEFAULT));
     $stmt->bindValue(':descricao', $this->descricao);
     $stmt->bindValue(':telefone', $this->telefone);
     $stmt->bindValue(':dataNascimento', $this->dataNascimento);

@@ -33,7 +33,11 @@ Class Clientes extends Controller{
     $modelCliente->email = $dadosInsercao->email;
     $modelCliente->senha = $dadosInsercao->senha;
     $modelCliente->telefone = $dadosInsercao->telefone;
-    $modelCliente->dataNascimento = $dadosInsercao->dataNascimento;
+    //Conversão da data
+    $data = explode('/', $dadosInsercao->dataNascimento);
+    $conversaoDaData = $data[2].'-'.$data[1].'-'.$data[0];
+    $modelCliente->dataNascimento = $conversaoDaData;
+
     $modelCliente->foto = $dadosInsercao->foto;
     $modelCliente->inserirCliente();
 
@@ -62,7 +66,7 @@ Class Clientes extends Controller{
       echo json_encode($erro);
       exit;
     }
-
+    //Conversão da foto
     $dadosEdicao = json_decode($json);
     $file_chunks = explode(";base64,", $dadosEdicao->foto);
     $fileType = explode("image/", $file_chunks[0]);
@@ -74,12 +78,15 @@ Class Clientes extends Controller{
     $modelCliente->idSexo = $dadosEdicao->idSexo;
     $modelCliente->nome = $dadosEdicao->nome;
     $modelCliente->email = $dadosEdicao->email;
-    $modelCliente->senha = $dadosEdicao->senha;
+    // $modelCliente->senha = $dadosEdicao->senha;
     $modelCliente->descricao = $dadosEdicao->descricao;
     $modelCliente->telefone = $dadosEdicao->telefone;
-    $modelCliente->dataNascimento = $dadosEdicao->dataNascimento;
+    //Conversão da data
+    $data = explode('/', $dadosEdicao->dataNascimento);
+    $conversaoDaData = $data[2].'-'.$data[1].'-'.$data[0];
+    $modelCliente->dataNascimento = $conversaoDaData;
     $modelCliente->foto = $file;
-
+    
     $modelEnderecoCLiente = $this->model("EnderecoCliente");
     $modelEnderecoCLiente->idCliente = $id;
     $modelEnderecoCLiente->uf = $dadosEdicao->uf;
