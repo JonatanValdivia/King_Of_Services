@@ -8,8 +8,11 @@ Class Prestador{
   public $idProfissao;
   public $idSexo;
   public $nome;
+  public $primeiroNome;
   public $email;
   public $senha;
+  public $sexo;
+  public $profissao;
   public $idEndereco;
   public $uf;
   public $cidade;
@@ -61,6 +64,7 @@ Class Prestador{
   public function procurarPorId($id){
     $sql = "SELECT tblprestadores.idPrestador as idPrestador,
     tblprestadores.nome as nome,
+    SUBSTRING_INDEX(tblprestadores.nome, ' ', 1) AS primeironome,
     tblsexo.descricao as sexo, 
     tblsexo.idSexo as idSexo,
     date_format(dataNascimento, '%d/%m/%Y') as dataNascimento, 
@@ -76,6 +80,7 @@ Class Prestador{
     tblEnderecoPrestadores.complemento as complemento, 
     tblEnderecoPrestadores.cep as CEP,
     tblprofissao.nomeProfissao as profissao,
+    tblProfissao.idProfissao as idProfissao,
     tblprestadores.descricao as descricao,
     tblPrestadores.foto as foto
     from tblprestadores 
@@ -93,7 +98,8 @@ Class Prestador{
     if($stmt->rowCount() > 0){
       $resultado = $stmt->fetch(\PDO::FETCH_OBJ);
       $this->idPrestador = $resultado->idPrestador;
-      $this->idSexo = $resultado->sexo;
+      $this->sexo = $resultado->sexo;
+      $this->idSexo = $resultado->idSexo;
       $this->idEndereco = $resultado->idEndereco;
       $this->uf = $resultado->uf;
       $this->cidade = $resultado->cidade;
@@ -102,17 +108,14 @@ Class Prestador{
       $this->numero = $resultado->numero;
       $this->complemento = $resultado->complemento;
       $this->cep = $resultado->CEP;
-      $this->idProfissao = $resultado->profissao;
+      $this->profissao = $resultado->profissao;
+      $this->idProfissao = $resultado->idProfissao;
       $this->nome = $resultado->nome;
       $this->descricao = $resultado->descricao;
       $this->email = $resultado->email;
       $this->telefone = $resultado->telefone;
       $this->dataNascimento = $resultado->dataNascimento;
       $this->foto = $resultado->foto;
-      // echo "<pre>";
-      // var_dump($this);
-      // echo "</pre>";
-      // exit;
       return $this;
     }else{
       return false;
@@ -120,7 +123,6 @@ Class Prestador{
   }
 
   public function criarPrestador(){
-
     $sql = "SELECT idPrestador from tblPrestadores where email = :e";
     $stmt = Model::getConn()->prepare($sql);
     $stmt->bindValue(":e", $this->email);
@@ -145,7 +147,6 @@ Class Prestador{
 
       if($stmt->execute()){
         $this->idPrestador = Model::getConn()->lastInsertId();
-        // echo json_encode($this->foto);
         return $this;
       }else{
         return false;
@@ -155,7 +156,7 @@ Class Prestador{
   
   public function atualizar(){
 
-    $sql = "UPDATE tblprestadores set idProfissao = :idProfissao, idSexo = :idSexo, nome = :nome, email = :email, descricao = :descricao, telefone = :telefone, dataNascimento = :dataNascimento, foto = :foto
+    $sql = "UPDATE tblprestadores set idProfissao = :idProfissao, idSexo = :idSexo, nome = :nome, email = :email, descricao = :descricao, telefone = :telefone, dataNascimento = :dataNascimento
     where idPrestador = :idPrestador;";
     $stmt = Model::getConn()->prepare($sql);
     $stmt->bindValue(":idProfissao", $this->idProfissao);
@@ -166,6 +167,20 @@ Class Prestador{
     $stmt->bindValue(":descricao", $this->descricao);
     $stmt->bindValue(":telefone", $this->telefone);
     $stmt->bindValue(":dataNascimento", $this->dataNascimento);
+    $stmt->bindValue(":idPrestador", $this->idPrestador);
+
+    if($stmt->execute()){
+      return $this;
+    }else{
+      return false;
+    }
+  }
+
+  public function atualizarFoto(){
+
+    $sql = "UPDATE tblprestadores set foto = :foto
+    where idPrestador = :idPrestador;";
+    $stmt = Model::getConn()->prepare($sql);
     $stmt->bindValue(":foto", $this->foto);
     $stmt->bindValue(":idPrestador", $this->idPrestador);
 
@@ -222,7 +237,7 @@ Class Prestador{
   }
 
   public function loginPrestador(){
-    $sql = "SELECT * from tblPrestadores where email = :email;";
+    $sql = "SELECT idPrestador, nome, SUBSTRING_INDEX(nome, ' ', 1) AS primeiroNome, email, senha from tblPrestadores where email = :email;";
     $stmt = Model::getConn()->prepare($sql);
     $stmt->bindValue(":email", $this->email);
     $stmt->execute();
@@ -233,6 +248,7 @@ Class Prestador{
       }else{
         $this->idPrestador = $resultado->idPrestador;
         $this->nome = $resultado->nome;
+        $this->primeiroNome = $resultado->primeiroNome;
         $this->senha = password_hash($resultado->senha, PASSWORD_DEFAULT);
         return $this;
       }

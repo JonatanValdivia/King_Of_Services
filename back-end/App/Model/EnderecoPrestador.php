@@ -54,6 +54,7 @@ Class EnderecoPrestador{
       echo json_encode($this);
       return $this;
     }else{
+      return false;
       echo "Erro";
     }
   }
@@ -70,7 +71,11 @@ Class EnderecoPrestador{
     $stmt->bindValue(":complemento", $this->complemento);
     $stmt->bindValue(":cep", $this->cep);
     $stmt->bindValue(":idEnderecoPrestador", $this->idEnderecoPrestador);
-    return $stmt->execute();
+    if($stmt->execute()){
+      return $this;
+    }else{
+      return false;
+    }
   }
 
   public function buscarPorId($id){

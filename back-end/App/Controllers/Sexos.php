@@ -20,7 +20,4 @@ Class Sexos extends Controller{
     return $modelSexo;
   }
 
-  public function find($id){
-
-  }
 }

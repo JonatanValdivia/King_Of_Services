@@ -40,7 +40,7 @@ Class Clientes extends Controller{
 
     $modelCliente->foto = $dadosInsercao->foto;
     $modelCliente->inserirCliente();
-
+    //Endereco do cleinte
     $modelEnderecoCLiente = $this->model("EnderecoCliente");
     $modelEnderecoCLiente->idCliente = $modelCliente->idCliente;
     $modelEnderecoCLiente->uf = $dadosInsercao->uf;
@@ -66,26 +66,17 @@ Class Clientes extends Controller{
       echo json_encode($erro);
       exit;
     }
-    //Conversão da foto
     $dadosEdicao = json_decode($json);
-    $file_chunks = explode(";base64,", $dadosEdicao->foto);
-    $fileType = explode("image/", $file_chunks[0]);
-    $image_type = $fileType[1];
-    $base64Img = base64_decode($file_chunks[1]);
-    $file = uniqid().'.'.$image_type;
-    file_put_contents($file, $base64Img);
 
     $modelCliente->idSexo = $dadosEdicao->idSexo;
     $modelCliente->nome = $dadosEdicao->nome;
     $modelCliente->email = $dadosEdicao->email;
-    // $modelCliente->senha = $dadosEdicao->senha;
     $modelCliente->descricao = $dadosEdicao->descricao;
     $modelCliente->telefone = $dadosEdicao->telefone;
     //Conversão da data
     $data = explode('/', $dadosEdicao->dataNascimento);
     $conversaoDaData = $data[2].'-'.$data[1].'-'.$data[0];
     $modelCliente->dataNascimento = $conversaoDaData;
-    $modelCliente->foto = $file;
     
     $modelEnderecoCLiente = $this->model("EnderecoCliente");
     $modelEnderecoCLiente->idCliente = $id;

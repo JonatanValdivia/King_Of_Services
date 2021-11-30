@@ -23,6 +23,7 @@ Class Logins extends Controller{
       $user_arr_data = array(
         "id"    => $modelPrestador->idPrestador,
         "name"  => $modelPrestador->nome,
+        "firstName" => $modelPrestador->primeiroNome,
         "email" => $modelPrestador->email,
       ); 
 
@@ -51,6 +52,7 @@ Class Logins extends Controller{
         $user_arr_data2 = array(
           "id"    => $modelCliente->idCliente,
           "name"  => $modelCliente->nome,
+          "firstName" => $modelCliente->primeiroNome,
           "email" => $modelCliente->email,
         );
 

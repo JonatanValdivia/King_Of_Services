@@ -8,6 +8,7 @@ class Cliente{
   public $idSexo;
   public $sexo;
   public $nome;
+  public $primeiroNome;
   public $email;
   public $senha;
   public $descricao;
@@ -137,7 +138,7 @@ class Cliente{
   }
 
   public function atualizar(){
-    $sql = "UPDATE tblclientes set idSexo = :idSexo, nome = :nome, email = :email, descricao = :descricao, telefone = :telefone, dataNascimento = :dataNascimento, foto = :foto where idCliente = :idCliente;";
+    $sql = "UPDATE tblclientes set idSexo = :idSexo, nome = :nome, email = :email, descricao = :descricao, telefone = :telefone, dataNascimento = :dataNascimento where idCliente = :idCliente;";
     $stmt = Model::getConn()->prepare($sql);
     $stmt->bindValue(':idSexo', $this->idSexo);
     $stmt->bindValue(':nome', $this->nome);
@@ -145,11 +146,24 @@ class Cliente{
     $stmt->bindValue(':descricao', $this->descricao);
     $stmt->bindValue(':telefone', $this->telefone);
     $stmt->bindValue(':dataNascimento', $this->dataNascimento);
-    $stmt->bindValue(':foto', $this->foto);
     $stmt->bindValue(':idCliente', $this->idCliente);
 
     return $stmt->execute();
 
+  }
+
+  public function atualizarFoto(){
+    $sql = "UPDATE tblClientes set foto = :foto
+    where idCliente = :id;";
+    $stmt = Model::getConn()->prepare($sql);
+    $stmt->bindValue(":foto", $this->foto);
+    $stmt->bindValue(":id", $this->idCliente);
+
+    if($stmt->execute()){
+      return $this;
+    }else{
+      return false;
+    }
   }
 
   public function deletar(){
@@ -160,7 +174,7 @@ class Cliente{
   }
 
   public function loginCliente(){
-    $sql = "SELECT * from tblClientes where email = :email;";
+    $sql = "SELECT idCliente, nome,  SUBSTRING_INDEX(nome, ' ', 1) as primeiroNome, email, senha from tblClientes where email = :email;";
     $stmt = Model::getConn()->prepare($sql);
     $stmt->bindValue(":email", $this->email);
     $stmt->execute();
@@ -171,6 +185,7 @@ class Cliente{
       }else{
         $this->idCliente = $resultado->idCliente;
         $this->nome = $resultado->nome;
+        $this->primeiroNome = $resultado->primeiroNome;
         $this->senha = password_hash($resultado->senha, PASSWORD_DEFAULT);
         return $this;
       }
