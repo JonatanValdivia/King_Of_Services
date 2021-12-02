@@ -29,8 +29,4 @@
         return json_encode($erro);
       }
     }
-
-    public function update($id){
-
-    }
   }

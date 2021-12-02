@@ -11,8 +11,4 @@
       $dados = $modelSolicitacao->ConcluidoPrestador($id);
       echo json_encode($dados);
     }
-
-    public function update($id){
-
-    }
   }

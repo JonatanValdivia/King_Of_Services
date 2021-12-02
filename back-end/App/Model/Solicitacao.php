@@ -15,6 +15,31 @@ Class Solicitacao{
 
   //Métodos do prestador
 
+  public function buscarPeloIdDaSolicitacao($id){
+    $sql = "SELECT idServicoPrestador,
+    idPrestador, 
+    idCliente, 
+    descricao, 
+    statusServico 
+    from tblservicosprestador 
+    where idServicoPrestador = :id;";
+
+    $stmt = Model::getConn()->prepare($sql);
+    $stmt->bindValue(":id", $id);
+    $stmt->execute();
+    if($stmt->rowCount() > 0){
+      $resultado = $stmt->fetch(\PDO::FETCH_OBJ);
+      $this->idServicoPrestador = $resultado->idServicoPrestador;
+      $this->idPrestador = $resultado->idPrestador;
+      $this->idCliente = $resultado->idCliente;
+      $this->descricao = $resultado->descricao;
+      $this->statusServico = $resultado->statusServico;
+      return $this;
+    }else{
+      return [];
+    }
+  }
+
   public function listarSolicitacoesDeClientesPeloIdDoPrestador($id){
     $sql = "SELECT tblServicosPrestador.idServicoPrestador, 
     tblServicosPrestador.idPrestador,
@@ -87,6 +112,30 @@ Class Solicitacao{
       return $resultado;
     }else{
       return [];
+    }
+  }
+
+  public function atualizarsolicitacaoServicoAceitar_andamento(){
+    $sql = "UPDATE tblservicosprestador set statusServico = 'pendente' where idServicoPrestador = :id;";
+    $stmt = Model::getConn()->prepare($sql);
+    $stmt->bindValue(':id', $this->idServicoPrestador);
+
+    if($stmt->execute()){
+      return $this;
+    }else{
+      return false;
+    }
+  }
+
+  public function atualizarsolicitacaoServicoAndamento_concluido(){
+    $sql = "UPDATE tblservicosprestador set statusServico = 'concluido' where idServicoPrestador = :id;";
+    $stmt = Model::getConn()->prepare($sql);
+    $stmt->bindValue(':id', $this->idServicoPrestador);
+
+    if($stmt->execute()){
+      return $this;
+    }else{
+      return false;
     }
   }
 
