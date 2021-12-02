@@ -1,6 +1,6 @@
 <?php
   use App\Core\Controller;
-  Class SolicitacoesClientes extends Controller{
+  Class SolicitacoesPrestadoresAceitar extends Controller{
     
     public function index(){
       echo "null"; 
@@ -8,7 +8,7 @@
 
     public function find($id){
       $modelSolicitacao = $this->model("Solicitacao");
-      $dados = $modelSolicitacao->visualizarSolicitacaoEAndamentoDoPedido($id);
+      $dados = $modelSolicitacao->listarSolicitacoesDeClientesPeloIdDoPrestador($id);
       echo json_encode($dados);
     }
 
