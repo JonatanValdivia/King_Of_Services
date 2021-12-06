@@ -174,7 +174,7 @@ class Cliente{
   }
 
   public function loginCliente(){
-    $sql = "SELECT idCliente, nome,  SUBSTRING_INDEX(nome, ' ', 1) as primeiroNome, email, senha from tblClientes where email = :email;";
+    $sql = "SELECT idCliente, nome,  SUBSTRING_INDEX(nome, ' ', 1) as primeiroNome, email, senha, foto from tblClientes where email = :email;";
     $stmt = Model::getConn()->prepare($sql);
     $stmt->bindValue(":email", $this->email);
     $stmt->execute();
@@ -187,6 +187,7 @@ class Cliente{
         $this->nome = $resultado->nome;
         $this->primeiroNome = $resultado->primeiroNome;
         $this->senha = password_hash($resultado->senha, PASSWORD_DEFAULT);
+        $this->foto = $resultado->foto;
         return $this;
       }
     }else{

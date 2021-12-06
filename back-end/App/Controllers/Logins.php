@@ -25,6 +25,7 @@ Class Logins extends Controller{
         "name"  => $modelPrestador->nome,
         "firstName" => $modelPrestador->primeiroNome,
         "email" => $modelPrestador->email,
+        "foto" => $modelPrestador->foto
       ); 
 
       $payload_info = array(
@@ -54,6 +55,7 @@ Class Logins extends Controller{
           "name"  => $modelCliente->nome,
           "firstName" => $modelCliente->primeiroNome,
           "email" => $modelCliente->email,
+          "foto" => $modelCliente->foto
         );
 
         $payload_info = array(
