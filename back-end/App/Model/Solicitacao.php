@@ -12,6 +12,8 @@ Class Solicitacao{
   public $nome;
   public $idade;
   public $foto;
+  public $criado;
+  public $atualizado;
 
   //Métodos do prestador
 
@@ -46,6 +48,8 @@ Class Solicitacao{
     tblServicosPrestador.idCliente, 
     tblServicosPrestador.descricao, 
     tblServicosPrestador.statusServico,
+    date_format(tblServicosPrestador.criado, '%d/%m/%Y') as criado,
+    date_format(tblServicosPrestador.criado, '%H:%i:%S') as criadoHora,
     tblclientes.nome,
     YEAR(CURDATE()) - YEAR(tblclientes.dataNascimento) as idade,
     tblclientes.foto
@@ -71,6 +75,10 @@ Class Solicitacao{
     tblServicosPrestador.idCliente, 
     tblServicosPrestador.descricao, 
     tblServicosPrestador.statusServico,
+    date_format(tblServicosPrestador.criado, '%d/%m/%Y') as criado,
+    date_format(tblServicosPrestador.criado, '%H:%i:%S') as criadoHora,
+     date_format(tblServicosPrestador.atualizado, '%d/%m/%Y') as atualizado,
+    date_format(tblServicosPrestador.atualizado, '%H:%i:%S') as atualizadoHora,
     tblclientes.nome,
     YEAR(CURDATE()) - YEAR(tblclientes.dataNascimento) as idade,
     tblclientes.foto
@@ -96,6 +104,10 @@ Class Solicitacao{
     tblServicosPrestador.idCliente, 
     tblServicosPrestador.descricao, 
     tblServicosPrestador.statusServico,
+    date_format(tblServicosPrestador.criado, '%d/%m/%Y') as criado,
+    date_format(tblServicosPrestador.criado, '%H:%i:%S') as criadoHora,
+     date_format(tblServicosPrestador.atualizado, '%d/%m/%Y') as atualizado,
+    date_format(tblServicosPrestador.atualizado, '%H:%i:%S') as atualizadoHora,
     tblclientes.nome,
     YEAR(CURDATE()) - YEAR(tblclientes.dataNascimento) as idade,
     tblclientes.foto
@@ -164,6 +176,10 @@ Class Solicitacao{
     tblServicosPrestador.idCliente, 
     tblServicosPrestador.descricao, 
     tblServicosPrestador.statusServico,
+    date_format(tblServicosPrestador.criado, '%d/%m/%Y') as criado,
+    date_format(tblServicosPrestador.criado, '%H:%i:%S') as criadoHora,
+     date_format(tblServicosPrestador.atualizado, '%d/%m/%Y') as atualizado,
+    date_format(tblServicosPrestador.atualizado, '%H:%i:%S') as atualizadoHora,
     tblprestadores.nome,
     tblprofissao.nomeProfissao,
     YEAR(CURDATE()) - YEAR(tblprestadores.dataNascimento) as idade,
@@ -191,6 +207,10 @@ Class Solicitacao{
     tblServicosPrestador.idCliente, 
     tblServicosPrestador.descricao, 
     tblServicosPrestador.statusServico,
+    date_format(tblServicosPrestador.criado, '%d/%m/%Y') as criado,
+    date_format(tblServicosPrestador.criado, '%H:%i:%S') as criadoHora,
+     date_format(tblServicosPrestador.atualizado, '%d/%m/%Y') as atualizado,
+    date_format(tblServicosPrestador.atualizado, '%H:%i:%S') as atualizadoHora,
     tblprestadores.nome,
     tblprofissao.nomeProfissao,
     YEAR(CURDATE()) - YEAR(tblprestadores.dataNascimento) as idade,
@@ -218,6 +238,10 @@ Class Solicitacao{
     tblServicosPrestador.idCliente, 
     tblServicosPrestador.descricao, 
     tblServicosPrestador.statusServico,
+    date_format(tblServicosPrestador.criado, '%d/%m/%Y') as criado,
+    date_format(tblServicosPrestador.criado, '%H:%i:%S') as criadoHora,
+     date_format(tblServicosPrestador.atualizado, '%d/%m/%Y') as atualizado,
+    date_format(tblServicosPrestador.atualizado, '%H:%i:%S') as atualizadoHora,
     tblprestadores.nome,
     tblprofissao.nomeProfissao,
     YEAR(CURDATE()) - YEAR(tblprestadores.dataNascimento) as idade,
