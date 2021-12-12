@@ -50,6 +50,8 @@ Class Solicitacao{
     tblServicosPrestador.statusServico,
     date_format(tblServicosPrestador.criado, '%d/%m/%Y') as criado,
     date_format(tblServicosPrestador.criado, '%H:%i:%S') as criadoHora,
+    date_format(tblServicosPrestador.atualizado, '%d/%m/%Y') as atualizado,
+    date_format(tblServicosPrestador.atualizado, '%H:%i:%S') as atualizadoHora,
     tblclientes.nome,
     YEAR(CURDATE()) - YEAR(tblclientes.dataNascimento) as idade,
     tblclientes.foto
@@ -77,7 +79,7 @@ Class Solicitacao{
     tblServicosPrestador.statusServico,
     date_format(tblServicosPrestador.criado, '%d/%m/%Y') as criado,
     date_format(tblServicosPrestador.criado, '%H:%i:%S') as criadoHora,
-     date_format(tblServicosPrestador.atualizado, '%d/%m/%Y') as atualizado,
+    date_format(tblServicosPrestador.atualizado, '%d/%m/%Y') as atualizado,
     date_format(tblServicosPrestador.atualizado, '%H:%i:%S') as atualizadoHora,
     tblclientes.nome,
     YEAR(CURDATE()) - YEAR(tblclientes.dataNascimento) as idade,
@@ -106,7 +108,7 @@ Class Solicitacao{
     tblServicosPrestador.statusServico,
     date_format(tblServicosPrestador.criado, '%d/%m/%Y') as criado,
     date_format(tblServicosPrestador.criado, '%H:%i:%S') as criadoHora,
-     date_format(tblServicosPrestador.atualizado, '%d/%m/%Y') as atualizado,
+    date_format(tblServicosPrestador.atualizado, '%d/%m/%Y') as atualizado,
     date_format(tblServicosPrestador.atualizado, '%H:%i:%S') as atualizadoHora,
     tblclientes.nome,
     YEAR(CURDATE()) - YEAR(tblclientes.dataNascimento) as idade,
@@ -114,6 +116,35 @@ Class Solicitacao{
     from tblservicosprestador inner join tblClientes
     on tblServicosPrestador.idCliente = tblClientes.idCliente
     where idPrestador = :id and tblServicosPrestador.statusServico = 'concluido';";
+
+    $stmt = Model::getConn()->prepare($sql);
+
+    $stmt->bindValue(':id', $id);
+    $stmt->execute();
+    if($stmt->rowCount() > 0){
+      $resultado = $stmt->fetchAll(\PDO::FETCH_OBJ);
+      return $resultado;
+    }else{
+      return [];
+    }
+  }
+
+  public function PagoPrestador($id){
+    $sql = "SELECT tblServicosPrestador.idServicoPrestador, 
+    tblServicosPrestador.idPrestador,
+    tblServicosPrestador.idCliente, 
+    tblServicosPrestador.descricao, 
+    tblServicosPrestador.statusServico,
+    date_format(tblServicosPrestador.criado, '%d/%m/%Y') as criado,
+    date_format(tblServicosPrestador.criado, '%H:%i:%S') as criadoHora,
+    date_format(tblServicosPrestador.atualizado, '%d/%m/%Y') as atualizado,
+    date_format(tblServicosPrestador.atualizado, '%H:%i:%S') as atualizadoHora,
+    tblclientes.nome,
+    YEAR(CURDATE()) - YEAR(tblclientes.dataNascimento) as idade,
+    tblclientes.foto
+    from tblservicosprestador inner join tblClientes
+    on tblServicosPrestador.idCliente = tblClientes.idCliente
+    where idPrestador = :id and tblServicosPrestador.statusServico = 'Pago';";
 
     $stmt = Model::getConn()->prepare($sql);
 
@@ -141,6 +172,18 @@ Class Solicitacao{
 
   public function atualizarsolicitacaoServicoAndamento_concluido(){
     $sql = "UPDATE tblservicosprestador set statusServico = 'concluido' where idServicoPrestador = :id;";
+    $stmt = Model::getConn()->prepare($sql);
+    $stmt->bindValue(':id', $this->idServicoPrestador);
+
+    if($stmt->execute()){
+      return $this;
+    }else{
+      return false;
+    }
+  }
+
+  public function atualizarsolicitacaoServicoConcluido_pago(){
+    $sql = "UPDATE tblservicosprestador set statusServico = 'pago' where idServicoPrestador = :id;";
     $stmt = Model::getConn()->prepare($sql);
     $stmt->bindValue(':id', $this->idServicoPrestador);
 
@@ -263,5 +306,34 @@ Class Solicitacao{
     }
   }
 
-  
+  public function visualizarPagoCliente($id){
+    $sql = "SELECT tblServicosPrestador.idServicoPrestador, 
+    tblServicosPrestador.idPrestador,
+    tblServicosPrestador.idCliente, 
+    tblServicosPrestador.descricao, 
+    tblServicosPrestador.statusServico,
+    date_format(tblServicosPrestador.criado, '%d/%m/%Y') as criado,
+    date_format(tblServicosPrestador.criado, '%H:%i:%S') as criadoHora,
+     date_format(tblServicosPrestador.atualizado, '%d/%m/%Y') as atualizado,
+    date_format(tblServicosPrestador.atualizado, '%H:%i:%S') as atualizadoHora,
+    tblprestadores.nome,
+    tblprofissao.nomeProfissao,
+    YEAR(CURDATE()) - YEAR(tblprestadores.dataNascimento) as idade,
+    tblprestadores.foto
+    from tblservicosprestador inner join tblprestadores
+    on tblServicosPrestador.idPrestador = tblprestadores.idPrestador
+    inner join tblprofissao on tblprestadores.idprofissao = tblprofissao.idprofissao
+    where idCliente = :id and tblServicosPrestador.statusServico = 'pago';";
+
+    $stmt = Model::getConn()->prepare($sql);
+
+    $stmt->bindValue(':id', $id);
+    $stmt->execute();
+    if($stmt->rowCount() > 0){
+      $resultado = $stmt->fetchAll(\PDO::FETCH_OBJ);
+      return $resultado;
+    }else{
+      return [];
+    }
+  }
 }
