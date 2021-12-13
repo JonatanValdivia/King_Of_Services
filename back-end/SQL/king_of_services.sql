@@ -259,17 +259,41 @@ create table tblServicosPrestador(
     references tblClientes (idCliente)
 );
 
+###################################
+##CRUD tblAvaliacoes
+###################################
+
+create table tblAvaliacoes (
+	idAvaliacao int not null auto_increment primary key,
+    unique key (idAvaliacao),
+    idPrestador int not null,
+    idCliente int not null, 
+    estrelas int not null, 
+    descricao varchar(200) not null, 
+    foto varchar(255),
+    
+    constraint FK_idPrestador_tblAvaliacoes
+    foreign key (idPrestador)
+    references tblprestadores (idPrestador),
+    
+    constraint FK_idCliente_tblAvaliacoes
+    foreign key (idCliente)
+    references tblClientes (idCliente)
+);
+
 ##################
 ##Todos os selects e descs
 ##################
 
 select * from tblEnderecoPrestadores;
 select * from tblprestadores;
+desc tblprestadores;
 select * from tblprofissao;
 select * from tblsexo;
 select * from tblClientes;
 select * from tblEnderecoClientes;
 select * from tblServicosPrestador;
+select * from tblavaliacoes;
 
 desc tblsexo;
 desc tblprestadores;
@@ -278,6 +302,7 @@ desc tblenderecoprestadores;
 desc tblclientes;
 desc tblenderecoclientes;
 desc tblservicosprestador;
+desc tblavaliacoes;
 
 ///////////////////////////////////////////
 ///////////////////////////////////////////
@@ -304,4 +329,20 @@ ALTER TABLE tblclientes ADD COLUMN descricao VARCHAR(500) after senha;
 ALTER TABLE tblclientes ADD COLUMN registro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP after foto;
 
 ALTER TABLE tblprestadores ADD COLUMN registro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP after foto;
+
+ALTER TABLE tblservicosprestador ADD COLUMN inicioServico TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP after statusServico;
+
+ALTER TABLE tblservicosprestador ADD COLUMN criado DATETIME DEFAULT CURRENT_TIMESTAMP; 
+
+ALTER TABLE tblservicosprestador ADD COLUMN atualizado timestamp default now() on update now() after criado; 
+
+ALTER TABLE tblavaliacoes ADD COLUMN comentado DATETIME DEFAULT CURRENT_TIMESTAMP; 
+
+ALTER TABLE tblavaliacoes ADD COLUMN atualizado timestamp default now() on update now() after comentado; 
+
+ALTER TABLE tblavaliacoes CHANGE descricao comentario varchar(255);
+
+ALTER TABLE tblavaliacoes CHANGE estrelas estrelas enum('1','2','3','4','5');
+
+ALTER TABLE tblservicosprestador CHANGE statusServico statusServico enum('aceitar','pendente','concluido','pago');
 
